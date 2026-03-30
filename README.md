@@ -92,15 +92,15 @@ curl -X GET http://localhost/api/v1/students/ \
 
 **Available Endpoints:**
 - `POST /api/v1/token/` - Get JWT token
-- `GET/POST /api/v1/students/` - Student management
-- `GET/POST /api/v1/blocks/` - Hostel blocks
-- `GET/POST /api/v1/rooms/` - Room management
-- `GET/POST /api/v1/allocations/` - Room allocations
-- `GET/POST /api/v1/mess-bills/` - Mess billing
-- `GET/POST /api/v1/mess-registrations/` - Mess registration
-- `GET/POST /api/v1/mess-menu/` - Mess menu
+- `GET/POST /api/v1/students/` - Student management (paginated)
+- `GET/POST /api/v1/blocks/` - Hostel blocks (paginated)
+- `GET/POST /api/v1/rooms/` - Room management (paginated)
+- `GET/POST /api/v1/allocations/` - Room allocations (paginated)
+- `GET/POST /api/v1/mess-bills/` - Mess billing (paginated)
+- `GET/POST /api/v1/mess-registrations/` - Mess registration (paginated)
+- `GET/POST /api/v1/mess-menu/` - Mess menu (paginated)
 
-📚 **Complete API examples:** [API_EXAMPLES.md](./API_EXAMPLES.md) with curl commands
+📚 **Full pagination guide:** [PAGINATION_GUIDE.md](./PAGINATION_GUIDE.md)
 
 ### First Time Setup
 After starting the application, create a superuser:

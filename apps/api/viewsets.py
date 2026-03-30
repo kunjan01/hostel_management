@@ -10,6 +10,7 @@ from django.db.models import Q, Sum
 from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
@@ -39,17 +40,21 @@ from .serializers import (
 class StudentViewSet(viewsets.ModelViewSet):
     """
     ViewSet for Student model
-    - GET /api/students/ - List all students (admin only)
-    - GET /api/students/{id}/ - Get student details
-    - POST /api/students/ - Create student (admin only)
-    - PUT /api/students/{id}/ - Update student (admin only)
-    - DELETE /api/students/{id}/ - Delete student (admin only)
-    - GET /api/students/{id}/bills/ - Get student's bills
-    - GET /api/students/{id}/bill-summary/ - Get student's bill summary
+    - GET /api/v1/students/ - List all students with pagination
+    - GET /api/v1/students/{id}/ - Get student details
+    - POST /api/v1/students/ - Create student (admin only)
+    - PUT /api/v1/students/{id}/ - Update student (admin only)
+    - DELETE /api/v1/students/{id}/ - Delete student (admin only)
+    - GET /api/v1/students/{id}/bills/ - Get student's bills
+    - GET /api/v1/students/{id}/bill-summary/ - Get student's bill summary
+    
+    Pagination: 50 items per page (?page=1)
+    Filtering: ?search=name&ordering=year
     """
 
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['name', 'enrollment_no', 'email']
     ordering_fields = ['name', 'enrollment_no', 'year']
@@ -120,15 +125,19 @@ class StudentViewSet(viewsets.ModelViewSet):
 class BlockViewSet(viewsets.ModelViewSet):
     """
     ViewSet for Block model
-    - GET /api/blocks/ - List all blocks
-    - GET /api/blocks/{id}/ - Get block details
-    - GET /api/blocks/{id}/rooms/ - Get rooms in block
-    - POST /api/blocks/ - Create block (admin only)
-    - PUT /api/blocks/{id}/ - Update block (admin only)
+    - GET /api/v1/blocks/ - List all blocks with pagination
+    - GET /api/v1/blocks/{id}/ - Get block details
+    - GET /api/v1/blocks/{id}/rooms/ - Get rooms in block
+    - POST /api/v1/blocks/ - Create block (admin only)
+    - PUT /api/v1/blocks/{id}/ - Update block (admin only)
+    
+    Pagination: 50 items per page (?page=1)
+    Filtering: ?search=name&ordering=block_type
     """
 
     queryset = Block.objects.all()
     serializer_class = BlockSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['name', 'warden_name']
     ordering_fields = ['name', 'block_type']
@@ -151,15 +160,19 @@ class BlockViewSet(viewsets.ModelViewSet):
 class RoomViewSet(viewsets.ModelViewSet):
     """
     ViewSet for Room model
-    - GET /api/rooms/ - List all rooms
-    - GET /api/rooms/{id}/ - Get room details
-    - POST /api/rooms/ - Create room (admin only)
-    - PUT /api/rooms/{id}/ - Update room (admin only)
-    - GET /api/rooms/{id}/allocations/ - Get allocations for room
+    - GET /api/v1/rooms/ - List all rooms with pagination
+    - GET /api/v1/rooms/{id}/ - Get room details
+    - POST /api/v1/rooms/ - Create room (admin only)
+    - PUT /api/v1/rooms/{id}/ - Update room (admin only)
+    - GET /api/v1/rooms/{id}/allocations/ - Get allocations for room
+    
+    Pagination: 50 items per page (?page=1)
+    Filtering: ?search=room_number&ordering=monthly_rent
     """
 
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['room_number', 'block__name', 'room_type']
     ordering_fields = ['room_number', 'monthly_rent', 'status']
@@ -182,15 +195,19 @@ class RoomViewSet(viewsets.ModelViewSet):
 class RoomAllocationViewSet(viewsets.ModelViewSet):
     """
     ViewSet for RoomAllocation model
-    - GET /api/allocations/ - List all allocations
-    - GET /api/allocations/{id}/ - Get allocation details
-    - POST /api/allocations/ - Create allocation (admin only)
-    - PUT /api/allocations/{id}/ - Update allocation (admin only)
-    - POST /api/allocations/{id}/vacate/ - Mark student as vacated
+    - GET /api/v1/allocations/ - List all allocations with pagination
+    - GET /api/v1/allocations/{id}/ - Get allocation details
+    - POST /api/v1/allocations/ - Create allocation (admin only)
+    - PUT /api/v1/allocations/{id}/ - Update allocation (admin only)
+    - POST /api/v1/allocations/{id}/vacate/ - Mark student as vacated
+    
+    Pagination: 50 items per page (?page=1)
+    Filtering: ?ordering=-allocation_date
     """
 
     queryset = RoomAllocation.objects.all()
     serializer_class = RoomAllocationSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     ordering_fields = ['allocation_date', 'status']
     ordering = ['-allocation_date']
@@ -215,14 +232,18 @@ class RoomAllocationViewSet(viewsets.ModelViewSet):
 class RoomBillViewSet(viewsets.ModelViewSet):
     """
     ViewSet for RoomBill model
-    - GET /api/room-bills/ - List room bills
-    - GET /api/room-bills/{id}/ - Get bill details
-    - POST /api/room-bills/{id}/mark-paid/ - Mark bill as paid
-    - POST /api/room-bills/{id}/mark-pending/ - Mark bill as pending
+    - GET /api/v1/room-bills/ - List room bills with pagination
+    - GET /api/v1/room-bills/{id}/ - Get bill details
+    - POST /api/v1/room-bills/{id}/mark-paid/ - Mark bill as paid
+    - POST /api/v1/room-bills/{id}/mark-pending/ - Mark bill as pending
+    
+    Pagination: 50 items per page (?page=1)
+    Filtering: ?search=student_name&ordering=-due_date
     """
 
     queryset = RoomBill.objects.all()
     serializer_class = RoomBillSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['student__name', 'status']
     ordering_fields = ['due_date', 'created_at', 'status']
@@ -255,13 +276,17 @@ class RoomBillViewSet(viewsets.ModelViewSet):
 class MessMenuViewSet(viewsets.ModelViewSet):
     """
     ViewSet for MessMenu model
-    - GET /api/mess-menu/ - List menu items
-    - POST /api/mess-menu/ - Create menu item (admin only)
-    - PUT /api/mess-menu/{id}/ - Update menu item (admin only)
+    - GET /api/v1/mess-menu/ - List menu items with pagination
+    - POST /api/v1/mess-menu/ - Create menu item (admin only)
+    - PUT /api/v1/mess-menu/{id}/ - Update menu item (admin only)
+    
+    Pagination: 50 items per page (?page=1)
+    Filtering: ?ordering=day
     """
 
     queryset = MessMenu.objects.all()
     serializer_class = MessMenuSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['day', 'meal']
     ordering_fields = ['day', 'meal']
@@ -276,13 +301,17 @@ class MessMenuViewSet(viewsets.ModelViewSet):
 class MessRegistrationViewSet(viewsets.ModelViewSet):
     """
     ViewSet for MessRegistration model
-    - GET /api/mess-registrations/ - List registrations
-    - POST /api/mess-registrations/ - Create registration (admin only)
-    - PUT /api/mess-registrations/{id}/ - Update registration (admin only)
+    - GET /api/v1/mess-registrations/ - List registrations with pagination
+    - POST /api/v1/mess-registrations/ - Create registration (admin only)
+    - PUT /api/v1/mess-registrations/{id}/ - Update registration (admin only)
+    
+    Pagination: 50 items per page (?page=1)
+    Filtering: ?search=student_name&ordering=-registration_date
     """
 
     queryset = MessRegistration.objects.all()
     serializer_class = MessRegistrationSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['student__name', 'plan']
     ordering_fields = ['registration_date', 'plan']
@@ -297,15 +326,19 @@ class MessRegistrationViewSet(viewsets.ModelViewSet):
 class MessBillViewSet(viewsets.ModelViewSet):
     """
     ViewSet for MessBill model
-    - GET /api/mess-bills/ - List mess bills
-    - GET /api/mess-bills/{id}/ - Get bill details
-    - POST /api/mess-bills/{id}/mark-paid/ - Mark bill as paid
-    - POST /api/mess-bills/{id}/mark-pending/ - Mark bill as pending
-    - POST /api/mess-bills/generate/ - Generate bills for month/year
+    - GET /api/v1/mess-bills/ - List mess bills with pagination
+    - GET /api/v1/mess-bills/{id}/ - Get bill details
+    - POST /api/v1/mess-bills/{id}/mark-paid/ - Mark bill as paid
+    - POST /api/v1/mess-bills/{id}/mark-pending/ - Mark bill as pending
+    - POST /api/v1/mess-bills/generate/ - Generate bills for month/year
+    
+    Pagination: 50 items per page (?page=1)
+    Filtering: ?search=student_name&ordering=-due_date
     """
 
     queryset = MessBill.objects.all()
     serializer_class = MessBillSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['student__name', 'status']
     ordering_fields = ['due_date', 'created_at', 'status']

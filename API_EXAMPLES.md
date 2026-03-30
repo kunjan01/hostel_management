@@ -39,7 +39,49 @@ curl -X POST http://localhost/api/v1/token/refresh/ \
 
 ---
 
-## 📋 API Endpoints
+## � Pagination
+
+All list endpoints return paginated results (50 items per page by default).
+
+### Get First Page
+```bash
+curl -X GET http://localhost/api/v1/students/ \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+### Get Specific Page
+```bash
+# Page 2
+curl -X GET http://localhost/api/v1/students/?page=2 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+
+# Page 5
+curl -X GET http://localhost/api/v1/students/?page=5 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+### Combine Pagination with Search & Ordering
+```bash
+# Search for "john" AND order by year AND get page 2
+curl -X GET "http://localhost/api/v1/students/?search=john&ordering=year&page=2" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+**Response includes:**
+```json
+{
+  "count": 150,
+  "next": "http://localhost/api/v1/students/?page=2",
+  "previous": null,
+  "results": [...]
+}
+```
+
+📚 **Full Pagination Guide:** [PAGINATION_GUIDE.md](./PAGINATION_GUIDE.md)
+
+---
+
+## �📋 API Endpoints
 
 ### Students
 
