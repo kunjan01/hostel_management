@@ -2,6 +2,11 @@
 
 A comprehensive Django REST Framework application for managing hostel operations with background tasks, REST API, and Docker containerization.
 
+[![Coverage](https://img.shields.io/badge/coverage-61%25-brightgreen)](./htmlcov/index.html)
+[![Tests](https://img.shields.io/badge/tests-29%2F37%20passing-blue)](./pytest.ini)
+[![Python](https://img.shields.io/badge/python-3.11+-blue)](#)
+[![Django](https://img.shields.io/badge/django-4.2.11-darkgreen)](#)
+
 ## 🚀 Quick Start
 
 ### Docker (Recommended)
@@ -19,9 +24,37 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-## 📚 Documentation
+📚 **Complete documentation** is in **[PROJECT_SETUP.md](./PROJECT_SETUP.md)**
 
-**Complete documentation** is in **[PROJECT_SETUP.md](./PROJECT_SETUP.md)**
+## 🧪 Testing & Coverage
+
+Coverage: **61%** | Tests: **29/37 passing**
+
+### Run Tests
+```bash
+# Run all tests with coverage
+python -m pytest
+
+# Run specific test file
+python -m pytest apps/api/tests.py -v
+
+# Run with coverage report
+bash run_coverage.sh
+```
+
+### View Coverage Report
+```bash
+# Generate HTML coverage report
+pytest --cov=apps --cov-report=html
+
+# Open in browser (Windows)
+start htmlcov/index.html
+
+# Open in browser (Mac/Linux)
+open htmlcov/index.html
+```
+
+## 📚 Documentation
 
 ## 🎯 Key Features
 
