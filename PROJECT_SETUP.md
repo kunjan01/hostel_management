@@ -512,11 +512,16 @@ docker exec hostel_web pytest --cov=apps
 ## Admin Panel
 
 ### Access Admin
-```
-URL: http://localhost/admin/
-Username: admin
-Password: admin123
-```
+1. Start the application (Docker or local)
+2. Create a superuser:
+   ```bash
+   # Docker
+   docker-compose exec web python manage.py createsuperuser
+   
+   # Local
+   python manage.py createsuperuser
+   ```
+3. Visit `http://localhost/admin/` and login with your credentials
 
 ### Admin Capabilities
 

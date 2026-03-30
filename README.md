@@ -42,7 +42,15 @@ python manage.py runserver
 | 📖 API Docs | `http://localhost/api/docs/` |
 | 💚 Health Check | `http://localhost/health/` |
 
-**Credentials**: Username: `admin` | Password: `admin123`
+### First Time Setup
+After starting the application, create a superuser:
+```bash
+docker-compose exec web python manage.py createsuperuser
+# Or locally:
+python manage.py createsuperuser
+```
+
+Then login to Admin Panel with your new credentials.
 
 ## 🔧 Tech Stack
 
