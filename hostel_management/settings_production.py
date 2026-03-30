@@ -10,11 +10,14 @@ from .settings import *  # noqa
 # Override DEBUG setting
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-# Secret key from environment
-SECRET_KEY = os.getenv(
-    'SECRET_KEY',
-    'django-insecure-change-me-in-production'
-)
+# Secret key from environment (REQUIRED in production)
+SECRET_KEY = os.getenv('SECRET_KEY')
+if not SECRET_KEY:
+    raise ValueError(
+        '⚠️  CRITICAL: SECRET_KEY environment variable is not set. '
+        'Set a strong SECRET_KEY in your .env file before running in production. '
+        'Example: SECRET_KEY=your-long-random-string-here'
+    )
 
 # Allowed hosts from environment
 ALLOWED_HOSTS = os.getenv(

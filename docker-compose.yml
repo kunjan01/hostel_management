@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_DB: ${DB_NAME:-hostel_management}
       POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres123}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-your-secure-password}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -51,9 +51,9 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=hostel_management.settings_production
       - DEBUG=${DEBUG:-False}
-      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - SECRET_KEY=${SECRET_KEY:-}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1}
-      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@db:5432/${DB_NAME:-hostel_management}
+      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-your-secure-password}@db:5432/${DB_NAME:-hostel_management}
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - EMAIL_BACKEND=${EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
@@ -63,7 +63,8 @@ services:
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD:-}
       - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL:-noreply@hostelmanagement.com}
     volumes:
-      - .:/app
+      # Development: Uncomment the line below to mount source code (live updates)
+      # - .:/app
       - static_volume:/app/staticfiles
       - media_volume:/app/media
       - logs_volume:/app/logs
@@ -92,8 +93,8 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=hostel_management.settings_production
       - DEBUG=${DEBUG:-False}
-      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
-      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@db:5432/${DB_NAME:-hostel_management}
+      - SECRET_KEY=${SECRET_KEY:-}
+      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-your-secure-password}@db:5432/${DB_NAME:-hostel_management}
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - EMAIL_BACKEND=${EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
@@ -102,12 +103,12 @@ services:
       - EMAIL_HOST_USER=${EMAIL_HOST_USER:-}
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD:-}
     volumes:
-      - .:/app
       - logs_volume:/app/logs
     depends_on:
-      - db
-      - redis
-      - web
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - hostel_network
 
@@ -121,17 +122,17 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=hostel_management.settings_production
       - DEBUG=${DEBUG:-False}
-      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
-      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@db:5432/${DB_NAME:-hostel_management}
+      - SECRET_KEY=${SECRET_KEY:-}
+      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-your-secure-password}@db:5432/${DB_NAME:-hostel_management}
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     volumes:
-      - .:/app
       - logs_volume:/app/logs
     depends_on:
-      - db
-      - redis
-      - web
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - hostel_network
 
