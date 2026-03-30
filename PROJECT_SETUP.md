@@ -226,9 +226,9 @@ docker-compose down
 | Service | URL | Purpose |
 |---------|-----|---------|
 | Django Admin | `http://localhost/admin/` | Manage database |
-| API Root | `http://localhost/api/` | API endpoint |
-| Swagger UI | `http://localhost/api/docs/` | API documentation |
-| ReDoc | `http://localhost/api/redoc/` | Alternative API docs |
+| API Root | `http://localhost/api/v1/` | API endpoint |
+| Swagger UI | `http://localhost/api/v1/docs/` | API documentation |
+| ReDoc | `http://localhost/api/v1/redoc/` | Alternative API docs |
 | Health Check | `http://localhost/health/` | Service status |
 
 ---

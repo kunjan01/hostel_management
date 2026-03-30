@@ -10,7 +10,7 @@ All API endpoints (except token endpoints) require JWT authentication.
 
 ### 1️⃣ Get Access Token
 ```bash
-curl -X POST http://localhost/api/token/ \
+curl -X POST http://localhost/api/v1/token/ \
   -H "Content-Type: application/json" \
   -d '{
     "username": "your_username",
@@ -30,7 +30,7 @@ Save the `access` token for API calls.
 
 ### 2️⃣ Refresh Token (when access expires)
 ```bash
-curl -X POST http://localhost/api/token/refresh/ \
+curl -X POST http://localhost/api/v1/token/refresh/ \
   -H "Content-Type: application/json" \
   -d '{
     "refresh": "your_refresh_token"
@@ -45,19 +45,19 @@ curl -X POST http://localhost/api/token/refresh/ \
 
 #### List All Students
 ```bash
-curl -X GET http://localhost/api/students/ \
+curl -X GET http://localhost/api/v1/students/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Get Single Student
 ```bash
-curl -X GET http://localhost/api/students/1/ \
+curl -X GET http://localhost/api/v1/students/1/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Create Student
 ```bash
-curl -X POST http://localhost/api/students/ \
+curl -X POST http://localhost/api/v1/students/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -72,7 +72,7 @@ curl -X POST http://localhost/api/students/ \
 
 #### Update Student
 ```bash
-curl -X PUT http://localhost/api/students/1/ \
+curl -X PUT http://localhost/api/v1/students/1/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -83,7 +83,7 @@ curl -X PUT http://localhost/api/students/1/ \
 
 #### Delete Student
 ```bash
-curl -X DELETE http://localhost/api/students/1/ \
+curl -X DELETE http://localhost/api/v1/students/1/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
@@ -93,19 +93,19 @@ curl -X DELETE http://localhost/api/students/1/ \
 
 #### List All Blocks
 ```bash
-curl -X GET http://localhost/api/blocks/ \
+curl -X GET http://localhost/api/v1/blocks/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Get Single Block
 ```bash
-curl -X GET http://localhost/api/blocks/1/ \
+curl -X GET http://localhost/api/v1/blocks/1/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Create Block
 ```bash
-curl -X POST http://localhost/api/blocks/ \
+curl -X POST http://localhost/api/v1/blocks/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -122,19 +122,19 @@ curl -X POST http://localhost/api/blocks/ \
 
 #### List All Rooms
 ```bash
-curl -X GET http://localhost/api/rooms/ \
+curl -X GET http://localhost/api/v1/rooms/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Get Single Room
 ```bash
-curl -X GET http://localhost/api/rooms/1/ \
+curl -X GET http://localhost/api/v1/rooms/1/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Create Room
 ```bash
-curl -X POST http://localhost/api/rooms/ \
+curl -X POST http://localhost/api/v1/rooms/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -152,13 +152,13 @@ curl -X POST http://localhost/api/rooms/ \
 
 #### List All Allocations
 ```bash
-curl -X GET http://localhost/api/allocations/ \
+curl -X GET http://localhost/api/v1/allocations/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Allocate Room to Student
 ```bash
-curl -X POST http://localhost/api/allocations/ \
+curl -X POST http://localhost/api/v1/allocations/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -170,7 +170,7 @@ curl -X POST http://localhost/api/allocations/ \
 
 #### Vacate Room (Mark as vacant)
 ```bash
-curl -X PATCH http://localhost/api/allocations/1/ \
+curl -X PATCH http://localhost/api/v1/allocations/1/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -185,13 +185,13 @@ curl -X PATCH http://localhost/api/allocations/1/ \
 
 #### Get Mess Menu
 ```bash
-curl -X GET http://localhost/api/mess-menu/ \
+curl -X GET http://localhost/api/v1/mess-menu/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Update Mess Menu
 ```bash
-curl -X POST http://localhost/api/mess-menu/ \
+curl -X POST http://localhost/api/v1/mess-menu/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -211,13 +211,13 @@ curl -X POST http://localhost/api/mess-menu/ \
 
 #### List Student Mess Registrations
 ```bash
-curl -X GET http://localhost/api/mess-registrations/ \
+curl -X GET http://localhost/api/v1/mess-registrations/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Register Student for Mess
 ```bash
-curl -X POST http://localhost/api/mess-registrations/ \
+curl -X POST http://localhost/api/v1/mess-registrations/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -233,19 +233,19 @@ curl -X POST http://localhost/api/mess-registrations/ \
 
 #### List All Mess Bills
 ```bash
-curl -X GET http://localhost/api/mess-bills/ \
+curl -X GET http://localhost/api/v1/mess-bills/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Get Single Mess Bill
 ```bash
-curl -X GET http://localhost/api/mess-bills/1/ \
+curl -X GET http://localhost/api/v1/mess-bills/1/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Generate Mess Bill (Admin Only)
 ```bash
-curl -X POST http://localhost/api/mess-bills/ \
+curl -X POST http://localhost/api/v1/mess-bills/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -264,13 +264,13 @@ curl -X POST http://localhost/api/mess-bills/ \
 
 #### List All Room Bills
 ```bash
-curl -X GET http://localhost/api/room-bills/ \
+curl -X GET http://localhost/api/v1/room-bills/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Get Single Room Bill
 ```bash
-curl -X GET http://localhost/api/room-bills/1/ \
+curl -X GET http://localhost/api/v1/room-bills/1/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
@@ -281,7 +281,7 @@ curl -X GET http://localhost/api/room-bills/1/ \
 ### Step 1: Login
 ```bash
 # Get token
-curl -X POST http://localhost/api/token/ \
+curl -X POST http://localhost/api/v1/token/ \
   -H "Content-Type: application/json" \
   -d '{"username": "admin", "password": "yourpassword"}' > token.json
 
@@ -292,7 +292,7 @@ echo $TOKEN
 
 ### Step 2: Create a Block
 ```bash
-curl -X POST http://localhost/api/blocks/ \
+curl -X POST http://localhost/api/v1/blocks/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -307,7 +307,7 @@ curl -X POST http://localhost/api/blocks/ \
 BLOCK_ID=$(cat block.json | grep -o '"id":[0-9]*' | cut -d':' -f2)
 
 for i in {1..40}; do
-  curl -X POST http://localhost/api/rooms/ \
+  curl -X POST http://localhost/api/v1/rooms/ \
     -H "Authorization: Bearer $TOKEN" \
     -H "Content-Type: application/json" \
     -d "{
@@ -321,7 +321,7 @@ done
 
 ### Step 4: Create Student
 ```bash
-curl -X POST http://localhost/api/students/ \
+curl -X POST http://localhost/api/v1/students/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -338,7 +338,7 @@ STUDENT_ID=$(cat student.json | grep -o '"id":[0-9]*' | cut -d':' -f2)
 
 ### Step 5: Allocate Room to Student
 ```bash
-curl -X POST http://localhost/api/allocations/ \
+curl -X POST http://localhost/api/v1/allocations/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d "{
@@ -353,7 +353,7 @@ curl -X POST http://localhost/api/allocations/ \
 ## 🚀 Using with Postman
 
 1. **Create New Request** → POST
-2. **URL:** `http://localhost/api/token/`
+2. **URL:** `http://localhost/api/v1/token/`
 3. **Body (JSON):**
    ```json
    {
@@ -371,9 +371,9 @@ curl -X POST http://localhost/api/allocations/ \
 ## 📖 Interactive API Documentation
 
 Visit these URLs in your browser:
-- **Swagger UI:** `http://localhost/api/docs/`
-- **ReDoc:** `http://localhost/api/redoc/`
-- **Schema:** `http://localhost/api/schema/`
+- **Swagger UI:** `http://localhost/api/v1/docs/`
+- **ReDoc:** `http://localhost/api/v1/redoc/`
+- **Schema:** `http://localhost/api/v1/schema/`
 
 These provide interactive API documentation with try-it-out functionality.
 
@@ -398,7 +398,7 @@ Authorization: Bearer YOUR_VALID_TOKEN
 **Problem:** Resource doesn't exist
 ```bash
 # Solution: Check the ID
-curl -X GET http://localhost/api/students/ \
+curl -X GET http://localhost/api/v1/students/ \
   -H "Authorization: Bearer YOUR_TOKEN"
 # Use a valid ID from the response
 ```
@@ -407,7 +407,7 @@ curl -X GET http://localhost/api/students/ \
 **Problem:** Invalid data format
 ```bash
 # Solution: Check required fields and data types
-curl -X POST http://localhost/api/students/ \
+curl -X POST http://localhost/api/v1/students/ \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{

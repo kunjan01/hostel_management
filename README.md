@@ -72,7 +72,7 @@ open htmlcov/index.html
 | Service | URL |
 |---------|-----|
 | 🔑 Admin Panel | `http://localhost/admin/` |
-| 📖 API Docs | `http://localhost/api/docs/` |
+| 📖 API Docs | `http://localhost/api/v1/docs/` |
 | 💚 Health Check | `http://localhost/health/` |
 
 ## 🔌 API Quick Reference
@@ -81,24 +81,24 @@ Get started with the API:
 
 ```bash
 # 1. Get access token
-curl -X POST http://localhost/api/token/ \
+curl -X POST http://localhost/api/v1/token/ \
   -H "Content-Type: application/json" \
   -d '{"username": "admin", "password": "your_password"}'
 
 # 2. Use token to access API
-curl -X GET http://localhost/api/students/ \
+curl -X GET http://localhost/api/v1/students/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 **Available Endpoints:**
-- `POST /api/token/` - Get JWT token
-- `GET/POST /api/students/` - Student management
-- `GET/POST /api/blocks/` - Hostel blocks
-- `GET/POST /api/rooms/` - Room management
-- `GET/POST /api/allocations/` - Room allocations
-- `GET/POST /api/mess-bills/` - Mess billing
-- `GET/POST /api/mess-registrations/` - Mess registration
-- `GET/POST /api/mess-menu/` - Mess menu
+- `POST /api/v1/token/` - Get JWT token
+- `GET/POST /api/v1/students/` - Student management
+- `GET/POST /api/v1/blocks/` - Hostel blocks
+- `GET/POST /api/v1/rooms/` - Room management
+- `GET/POST /api/v1/allocations/` - Room allocations
+- `GET/POST /api/v1/mess-bills/` - Mess billing
+- `GET/POST /api/v1/mess-registrations/` - Mess registration
+- `GET/POST /api/v1/mess-menu/` - Mess menu
 
 📚 **Complete API examples:** [API_EXAMPLES.md](./API_EXAMPLES.md) with curl commands
 
