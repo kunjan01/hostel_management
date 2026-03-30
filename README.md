@@ -42,6 +42,33 @@ python manage.py runserver
 | 📖 API Docs | `http://localhost/api/docs/` |
 | 💚 Health Check | `http://localhost/health/` |
 
+## 🔌 API Quick Reference
+
+Get started with the API:
+
+```bash
+# 1. Get access token
+curl -X POST http://localhost/api/token/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "your_password"}'
+
+# 2. Use token to access API
+curl -X GET http://localhost/api/students/ \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+**Available Endpoints:**
+- `POST /api/token/` - Get JWT token
+- `GET/POST /api/students/` - Student management
+- `GET/POST /api/blocks/` - Hostel blocks
+- `GET/POST /api/rooms/` - Room management
+- `GET/POST /api/allocations/` - Room allocations
+- `GET/POST /api/mess-bills/` - Mess billing
+- `GET/POST /api/mess-registrations/` - Mess registration
+- `GET/POST /api/mess-menu/` - Mess menu
+
+📚 **Complete API examples:** [API_EXAMPLES.md](./API_EXAMPLES.md) with curl commands
+
 ### First Time Setup
 After starting the application, create a superuser:
 ```bash
