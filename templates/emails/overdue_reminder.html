@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #d9534f; color: white; padding: 15px; border-radius: 5px; text-align: center; }
+        .content { margin: 20px 0; }
+        .bill-summary { background-color: #f5f5f5; padding: 15px; border-left: 4px solid #d9534f; margin: 15px 0; }
+        .footer { color: #999; font-size: 12px; text-align: center; margin-top: 30px; }
+        .button { background-color: #d9534f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 3px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>⚠️  Overdue Bill Reminder</h2>
+        </div>
+        
+        <div class="content">
+            <p>Dear <strong>{{ student_name }}</strong>,</p>
+            
+            <p>This is a reminder that you have <strong>overdue bills</strong> that require immediate payment.</p>
+            
+            <div class="bill-summary">
+                <h3>Bill Summary:</h3>
+                {% if bill_summary %}
+                    <p><strong>Mess Bills:</strong></p>
+                    <ul>
+                        <li>Pending: {{ bill_summary.mess_bills.pending }} bills</li>
+                        <li>Total Amount: ₹{{ bill_summary.mess_bills.total_amount }}</li>
+                    </ul>
+                    
+                    <p><strong>Room Bills:</strong></p>
+                    <ul>
+                        <li>Pending: {{ bill_summary.room_bills.pending }} bills</li>
+                        <li>Total Amount: ₹{{ bill_summary.room_bills.total_amount }}</li>
+                    </ul>
+                {% endif %}
+                <p><strong style="color: #d9534f;">These bills are {{ overdue_days }}+ days overdue!</strong></p>
+            </div>
+            
+            <p><strong>Enrollment Number:</strong> {{ enrollment_no }}</p>
+            
+            <p>Please make the payment as soon as possible to avoid any further action.</p>
+            
+            <p>If you have already made the payment, please disregard this email.</p>
+            
+            <p>
+                For any queries or payment issues, please contact:
+                <br><strong>Email:</strong> {{ contact_email }}
+            </p>
+            
+            <p>Best regards,<br>Hostel Management Team</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated email from Hostel Management System. Please do not reply.</p>
+        </div>
+    </div>
+</body>
+</html>

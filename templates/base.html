@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HMS{% endblock %} | Hostel Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1629;
+            --bg-card: #141c2e;
+            --bg-card-hover: #192238;
+            --accent: #4f8ef7;
+            --accent-glow: rgba(79, 142, 247, 0.15);
+            --accent-2: #7c5cbf;
+            --success: #10d48e;
+            --warning: #f5a623;
+            --danger: #f7536c;
+            --text-primary: #e8edf5;
+            --text-secondary: #8896b0;
+            --text-muted: #4a5568;
+            --border: rgba(255,255,255,0.06);
+            --sidebar-w: 260px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; }
+        .sidebar { position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--bg-secondary);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:1000;overflow-y:auto; }
+        .sidebar-brand { padding:24px 20px 20px;border-bottom:1px solid var(--border); }
+        .brand-icon { width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;margin-bottom:10px; }
+        .brand-name { font-size:16px;font-weight:800;color:var(--text-primary);letter-spacing:-0.3px; }
+        .brand-sub { font-size:11px;color:var(--text-secondary);font-weight:500;letter-spacing:0.5px; }
+        .role-chip { display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.3px; }
+        .role-admin { background:rgba(79,142,247,0.15);color:var(--accent); }
+        .role-warden { background:rgba(124,92,191,0.15);color:var(--accent-2); }
+        .nav-section { padding:20px 12px 8px; }
+        .nav-section-label { font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--text-muted);text-transform:uppercase;padding:0 8px;margin-bottom:6px; }
+        .nav-item { margin-bottom:2px; }
+        .nav-link { display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;color:var(--text-secondary);font-size:13.5px;font-weight:500;text-decoration:none;transition:all 0.15s ease; }
+        .nav-link:hover { background:var(--accent-glow);color:var(--accent); }
+        .nav-link.active { background:var(--accent-glow);color:var(--accent);font-weight:600; }
+        .nav-link i { width:18px;text-align:center;font-size:14px; }
+        .sidebar-footer { margin-top:auto;padding:16px 12px;border-top:1px solid var(--border); }
+        .main-content { margin-left:var(--sidebar-w);min-height:100vh; }
+        .topbar { background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100; }
+        .page-title { font-size:16px;font-weight:700;color:var(--text-primary); }
+        .topbar-actions { display:flex;align-items:center;gap:12px; }
+        .user-chip { display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:6px 12px;text-decoration:none;transition:all 0.15s; }
+        .user-chip:hover { border-color:var(--accent); }
+        .user-avatar { width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white; }
+        .avatar-admin { background:linear-gradient(135deg,var(--accent),var(--accent-2)); }
+        .avatar-warden { background:linear-gradient(135deg,var(--accent-2),#a855f7); }
+        .user-name { font-size:13px;font-weight:600;color:var(--text-primary); }
+        .user-role-tag { font-size:10px;color:var(--text-secondary); }
+        .content-area { padding:28px; }
+        .card { background:var(--bg-card);border:1px solid var(--border);border-radius:12px; }
+        .card-header { background:transparent;border-bottom:1px solid var(--border);padding:16px 20px;font-weight:700;font-size:14px; }
+        .card-body { padding:20px; }
+        .stat-card { background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;transition:all 0.2s ease;position:relative;overflow:hidden; }
+        .stat-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px; }
+        .stat-card.blue::before  { background:linear-gradient(90deg,var(--accent),transparent); }
+        .stat-card.green::before { background:linear-gradient(90deg,var(--success),transparent); }
+        .stat-card.purple::before{ background:linear-gradient(90deg,var(--accent-2),transparent); }
+        .stat-card.orange::before{ background:linear-gradient(90deg,var(--warning),transparent); }
+        .stat-card.red::before   { background:linear-gradient(90deg,var(--danger),transparent); }
+        .stat-card:hover { border-color:rgba(255,255,255,0.12);transform:translateY(-1px); }
+        .stat-icon { width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px; }
+        .stat-icon.blue   { background:rgba(79,142,247,0.12);color:var(--accent); }
+        .stat-icon.green  { background:rgba(16,212,142,0.12);color:var(--success); }
+        .stat-icon.purple { background:rgba(124,92,191,0.12);color:var(--accent-2); }
+        .stat-icon.orange { background:rgba(245,166,35,0.12);color:var(--warning); }
+        .stat-icon.red    { background:rgba(247,83,108,0.12);color:var(--danger); }
+        .stat-value { font-size:28px;font-weight:800;line-height:1;margin-bottom:4px; }
+        .stat-label { font-size:12px;color:var(--text-secondary);font-weight:500; }
+        .table { color:var(--text-primary);margin:0; }
+        .table th { background:rgba(255,255,255,0.03);border-color:var(--border);color:var(--text-secondary);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:12px 16px; }
+        .table td { border-color:var(--border);padding:12px 16px;font-size:13.5px;vertical-align:middle; }
+        .table tbody tr:hover { background:rgba(255,255,255,0.02); }
+        .badge-status { font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;display:inline-block; }
+        .badge-available  { background:rgba(16,212,142,0.12);color:var(--success); }
+        .badge-occupied   { background:rgba(247,83,108,0.12);color:var(--danger); }
+        .badge-pending    { background:rgba(245,166,35,0.12);color:var(--warning); }
+        .badge-active     { background:rgba(79,142,247,0.12);color:var(--accent); }
+        .badge-paid       { background:rgba(16,212,142,0.12);color:var(--success); }
+        .badge-resolved   { background:rgba(16,212,142,0.12);color:var(--success); }
+        .badge-maintenance{ background:rgba(124,92,191,0.12);color:var(--accent-2); }
+        .badge-high       { background:rgba(247,83,108,0.12);color:var(--danger); }
+        .badge-medium     { background:rgba(245,166,35,0.12);color:var(--warning); }
+        .badge-low        { background:rgba(79,142,247,0.12);color:var(--accent); }
+        .badge-inprogress { background:rgba(79,142,247,0.12);color:var(--accent); }
+        .btn-primary { background:var(--accent);border-color:var(--accent);font-weight:600;font-size:13px; }
+        .btn-primary:hover { background:#3a7be8;border-color:#3a7be8; }
+        .btn-outline-secondary { border-color:var(--border);color:var(--text-secondary);font-size:13px; }
+        .btn-outline-secondary:hover { background:var(--bg-card-hover);color:var(--text-primary);border-color:var(--border); }
+        .btn-sm { font-size:12px;padding:5px 12px; }
+        .form-control,.form-select { background:var(--bg-primary);border-color:var(--border);color:var(--text-primary);font-size:13.5px; }
+        .form-control:focus,.form-select:focus { background:var(--bg-primary);border-color:var(--accent);color:var(--text-primary);box-shadow:0 0 0 3px var(--accent-glow); }
+        .form-label { font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:6px; }
+        .form-control::placeholder { color:var(--text-muted); }
+        .form-check-input:checked { background-color:var(--accent);border-color:var(--accent); }
+        .page-header { margin-bottom:24px; }
+        .page-header h1 { font-size:22px;font-weight:800; }
+        .page-header p { color:var(--text-secondary);font-size:13px;margin-top:4px; }
+        .alert { border-radius:10px;font-size:13.5px;border:none; }
+        .alert-success { background:rgba(16,212,142,0.1);color:#4ade99; }
+        .alert-danger  { background:rgba(247,83,108,0.1);color:#f87191; }
+        .alert-info    { background:rgba(79,142,247,0.1);color:#93c5fd; }
+        .alert-warning { background:rgba(245,166,35,0.1);color:#fcd34d; }
+        .student-avatar { width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:white;flex-shrink:0; }
+        ::-webkit-scrollbar { width:6px; }
+        ::-webkit-scrollbar-track { background:transparent; }
+        ::-webkit-scrollbar-thumb { background:var(--text-muted);border-radius:3px; }
+        /* Scope banner for wardens */
+        .scope-banner { background:rgba(124,92,191,0.08);border:1px solid rgba(124,92,191,0.2);border-radius:8px;padding:10px 16px;font-size:12.5px;color:var(--accent-2);margin-bottom:16px;display:flex;align-items:center;gap:8px; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+{% if user.is_authenticated %}
+<nav class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><i class="fas fa-building"></i></div>
+        <div class="brand-name">HMS Portal</div>
+        <div class="brand-sub">Hostel Management System</div>
+        {% if is_admin_user %}
+        <span class="role-chip role-admin"><i class="fas fa-shield-halved"></i> Administrator</span>
+        {% else %}
+        <span class="role-chip role-warden"><i class="fas fa-user-tie"></i> Warden</span>
+        {% endif %}
+    </div>
+
+    {% if not is_admin_user and warden_blocks %}
+    <div style="padding:12px 14px;border-bottom:1px solid var(--border);">
+        <div style="font-size:10px;color:var(--text-muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">My Blocks</div>
+        {% for blk in warden_blocks %}
+        <a href="{% url 'block_detail' blk.pk %}" style="display:inline-block;text-decoration:none;margin-right:4px;margin-bottom:4px;">
+            <span class="badge-status badge-active" style="cursor:pointer;">Block {{ blk.name }}</span>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="nav-section">
+        <div class="nav-section-label">Overview</div>
+        <div class="nav-item">
+            <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-section-label">Students</div>
+        <div class="nav-item">
+            <a href="{% url 'student_list' %}" class="nav-link {% if 'student_list' == request.resolver_match.url_name or 'student_detail' == request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-user-graduate"></i> All Students
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{% url 'student_add' %}" class="nav-link {% if 'student_add' == request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-user-plus"></i> Add Student
+            </a>
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-section-label">Hostel</div>
+        <div class="nav-item">
+            <a href="{% url 'block_list' %}" class="nav-link {% if 'block' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-city"></i> Blocks
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{% url 'room_list' %}" class="nav-link {% if 'room_list' == request.resolver_match.url_name or 'room_detail' == request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-door-open"></i> Rooms
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{% url 'allocation_list' %}" class="nav-link {% if 'allocation' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-bed"></i> Allocations
+            </a>
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-section-label">Mess</div>
+        <div class="nav-item">
+            <a href="{% url 'mess_menu' %}" class="nav-link {% if 'menu' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-utensils"></i> Menu
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{% url 'registration_list' %}" class="nav-link {% if 'registration' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-clipboard-list"></i> Registrations
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{% url 'bill_list' %}" class="nav-link {% if 'bill' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-file-invoice-dollar"></i> Bills
+            </a>
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-section-label">Support</div>
+        <div class="nav-item">
+            <a href="{% url 'complaint_list' %}" class="nav-link {% if 'complaint' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-circle-exclamation"></i> Complaints
+            </a>
+        </div>
+    </div>
+
+    {% if is_admin_user %}
+    <div class="nav-section">
+        <div class="nav-section-label">Administration</div>
+        <div class="nav-item">
+            <a href="{% url 'warden_list' %}" class="nav-link {% if 'warden' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fas fa-user-shield"></i> Wardens
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="/admin/" class="nav-link" target="_blank">
+                <i class="fas fa-screwdriver-wrench"></i> Django Admin
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="sidebar-footer">
+        <a href="{% url 'profile' %}" class="nav-link {% if 'profile' == request.resolver_match.url_name %}active{% endif %}" style="margin-bottom:4px;">
+            <i class="fas fa-circle-user"></i> My Profile
+        </a>
+        <a href="{% url 'logout' %}" class="nav-link" style="color:var(--danger);">
+            <i class="fas fa-right-from-bracket"></i> Logout
+        </a>
+    </div>
+</nav>
+
+<div class="main-content">
+    <div class="topbar">
+        <div class="page-title">{% block page_title %}Dashboard{% endblock %}</div>
+        <div class="topbar-actions">
+            <a href="{% url 'profile' %}" class="user-chip">
+                <div class="user-avatar {% if is_admin_user %}avatar-admin{% else %}avatar-warden{% endif %}">
+                    {{ request.user.username.0|upper }}
+                </div>
+                <div>
+                    <div class="user-name">{{ request.user.get_full_name|default:request.user.username }}</div>
+                    <div class="user-role-tag">{% if is_admin_user %}Administrator{% else %}Warden{% endif %}</div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="content-area">
+        {% if not is_admin_user and warden_blocks %}
+        <div class="scope-banner">
+            <i class="fas fa-eye"></i>
+            You are viewing data for:
+            {% for blk in warden_blocks %}<strong>Block {{ blk.name }}</strong>{% if not forloop.last %}, {% endif %}{% endfor %}
+            only.
+        </div>
+        {% endif %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' or message.tags == 'danger' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+    </div>
+</div>
+{% else %}
+{% block auth_content %}{% endblock %}
+{% endif %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

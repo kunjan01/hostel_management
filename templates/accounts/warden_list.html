@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Wardens{% endblock %}
+{% block page_title %}Warden Management{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-start">
+    <div>
+        <h1>Wardens</h1>
+        <p>Manage block wardens and their access</p>
+    </div>
+    <a href="{% url 'warden_add' %}" class="btn btn-primary"><i class="fas fa-user-plus me-2"></i>Add Warden</a>
+</div>
+
+<div class="card">
+    <div class="card-header"><i class="fas fa-user-shield me-2" style="color:var(--accent-2);"></i>{{ wardens|length }} Warden{{ wardens|length|pluralize }}</div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Warden</th>
+                    <th>Employee ID</th>
+                    <th>Phone</th>
+                    <th>Assigned Blocks</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for wp in wardens %}
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="student-avatar" style="background:linear-gradient(135deg,var(--accent-2),var(--accent));">
+                            {{ wp.user.first_name.0|default:wp.user.username.0|upper }}
+                        </div>
+                        <div>
+                            <div style="font-weight:600;font-size:13px;">{{ wp.user.get_full_name|default:wp.user.username }}</div>
+                            <div style="color:var(--text-secondary);font-size:11px;">{{ wp.user.email }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    {% if wp.employee_id %}
+                    <code style="color:var(--accent-2);font-family:'JetBrains Mono';font-size:12px;">{{ wp.employee_id }}</code>
+                    {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+                </td>
+                <td style="font-size:13px;">{{ wp.phone|default:"—" }}</td>
+                <td>
+                    {% for block in wp.blocks.all %}
+                        <span class="badge-status badge-active" style="margin-right:4px;margin-bottom:2px;display:inline-block;">Block {{ block.name }}</span>
+                    {% empty %}
+                        <span style="color:var(--text-muted);font-size:12px;">Not assigned</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if wp.is_active %}
+                        <span class="badge-status badge-available">Active</span>
+                    {% else %}
+                        <span class="badge-status badge-occupied">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="d-flex gap-1">
+                        <a href="{% url 'warden_edit' wp.pk %}" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="fas fa-pen"></i></a>
+                        <a href="{% url 'warden_delete' wp.pk %}" class="btn btn-sm" style="background:rgba(247,83,108,0.1);color:var(--danger);" title="Delete"><i class="fas fa-trash"></i></a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center;color:var(--text-muted);padding:56px;">
+                    <i class="fas fa-user-shield" style="font-size:40px;display:block;margin-bottom:14px;opacity:0.2;"></i>
+                    <div style="font-size:15px;font-weight:600;margin-bottom:6px;color:var(--text-secondary);">No wardens yet</div>
+                    <a href="{% url 'warden_add' %}" class="btn btn-primary btn-sm mt-2">Add First Warden</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Info box -->
+<div style="margin-top:16px;padding:16px 20px;background:rgba(124,92,191,0.07);border:1px solid rgba(124,92,191,0.2);border-radius:10px;font-size:13px;color:var(--text-secondary);">
+    <i class="fas fa-circle-info me-2" style="color:var(--accent-2);"></i>
+    <strong style="color:var(--text-primary);">How warden access works:</strong>
+    Wardens log in with their own credentials and can only view/manage students, rooms, complaints, and mess data
+    for the blocks they are assigned to. Admins have full access to everything.
+</div>
+{% endblock %}

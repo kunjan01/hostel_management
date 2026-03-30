@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Complaints{% endblock %}
+{% block page_title %}Complaints{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-start">
+    <div><h1>Complaints</h1><p>Manage student complaints and requests</p></div>
+    <a href="{% url 'complaint_add' %}" class="btn btn-primary"><i class="fas fa-plus me-2"></i>New Complaint</a>
+</div>
+<!-- Filter bar -->
+<div class="card mb-4">
+    <div class="card-body" style="padding:12px 20px;">
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'complaint_list' %}" class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-outline-secondary{% endif %}">All</a>
+            <a href="?status=Pending" class="btn btn-sm {% if status_filter == 'Pending' %}btn-primary{% else %}btn-outline-secondary{% endif %}">Pending</a>
+            <a href="?status=In Progress" class="btn btn-sm {% if status_filter == 'In Progress' %}btn-primary{% else %}btn-outline-secondary{% endif %}">In Progress</a>
+            <a href="?status=Resolved" class="btn btn-sm {% if status_filter == 'Resolved' %}btn-primary{% else %}btn-outline-secondary{% endif %}">Resolved</a>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header"><i class="fas fa-circle-exclamation me-2" style="color:var(--warning);"></i>{{ complaints|length }} Complaint{{ complaints|length|pluralize }}</div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Student</th><th>Category</th><th>Subject</th><th>Priority</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for c in complaints %}
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="student-avatar" style="width:30px;height:30px;font-size:12px;">{{ c.student.name.0 }}</div>
+                        <div style="font-size:13px;font-weight:600;">{{ c.student.name }}</div>
+                    </div>
+                </td>
+                <td><span style="font-size:12px;color:var(--text-secondary);">{{ c.category }}</span></td>
+                <td style="font-size:13px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ c.subject }}</td>
+                <td><span class="badge-status badge-{{ c.priority|lower }}">{{ c.priority }}</span></td>
+                <td>
+                    <span class="badge-status {% if c.status == 'Pending' %}badge-pending{% elif c.status == 'In Progress' %}badge-active{% elif c.status == 'Resolved' %}badge-resolved{% else %}badge-occupied{% endif %}">{{ c.status }}</span>
+                </td>
+                <td style="font-size:11px;color:var(--text-secondary);">{{ c.created_at|date:"d M Y" }}</td>
+                <td><a href="{% url 'complaint_detail' c.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye"></i></a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:56px;">
+                <i class="fas fa-face-smile" style="font-size:40px;display:block;margin-bottom:14px;opacity:0.2;color:var(--success);"></i>
+                <div style="font-size:15px;font-weight:600;color:var(--text-secondary);">No complaints found!</div>
+            </td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

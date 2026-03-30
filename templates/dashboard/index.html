@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Good day, {{ request.user.get_full_name|default:request.user.username }} 👋</h1>
+    <p>Here's what's happening at your hostel today.</p>
+</div>
+
+<!-- Stat Cards Row 1 -->
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card blue">
+            <div class="stat-icon blue"><i class="fas fa-user-graduate"></i></div>
+            <div class="stat-value">{{ total_students }}</div>
+            <div class="stat-label">Total Students</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card green">
+            <div class="stat-icon green"><i class="fas fa-door-open"></i></div>
+            <div class="stat-value">{{ available_rooms }}</div>
+            <div class="stat-label">Available Rooms</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card red">
+            <div class="stat-icon red"><i class="fas fa-bed"></i></div>
+            <div class="stat-value">{{ occupied_rooms }}</div>
+            <div class="stat-label">Occupied Rooms</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card purple">
+            <div class="stat-icon purple"><i class="fas fa-city"></i></div>
+            <div class="stat-value">{{ total_blocks }}</div>
+            <div class="stat-label">Blocks</div>
+        </div>
+    </div>
+</div>
+
+<!-- Stat Cards Row 2 -->
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card purple">
+            <div class="stat-icon purple"><i class="fas fa-key"></i></div>
+            <div class="stat-value">{{ active_allocations }}</div>
+            <div class="stat-label">Active Allocations</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card green">
+            <div class="stat-icon green"><i class="fas fa-utensils"></i></div>
+            <div class="stat-value">{{ mess_registered }}</div>
+            <div class="stat-label">Mess Registered</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card orange">
+            <div class="stat-icon orange"><i class="fas fa-file-invoice-dollar"></i></div>
+            <div class="stat-value">{{ pending_bills }}</div>
+            <div class="stat-label">Pending Bills</div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card red">
+            <div class="stat-icon red"><i class="fas fa-circle-exclamation"></i></div>
+            <div class="stat-value">{{ pending_complaints }}</div>
+            <div class="stat-label">Pending Complaints</div>
+        </div>
+    </div>
+</div>
+
+<!-- Tables Row -->
+<div class="row g-3">
+    <div class="col-xl-7">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-user-graduate me-2" style="color:var(--accent);"></i>Recent Students</span>
+                <a href="{% url 'student_list' %}" class="btn btn-sm btn-outline-secondary">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead><tr><th>Student</th><th>Enrollment</th><th>Course</th><th>Status</th></tr></thead>
+                    <tbody>
+                        {% for student in recent_students %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="student-avatar">{{ student.name.0 }}</div>
+                                    <div>
+                                        <div style="font-weight:600; font-size:13px;">{{ student.name }}</div>
+                                        <div style="color:var(--text-secondary); font-size:11px;">{{ student.email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><code style="color:var(--accent); font-family:'JetBrains Mono'; font-size:12px;">{{ student.enrollment_no }}</code></td>
+                            <td><span style="font-size:12px; color:var(--text-secondary);">{{ student.get_course_display }}</span></td>
+                            <td><span class="badge-status badge-active">Active</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:32px;">No students added yet. <a href="{% url 'student_add' %}">Add one</a></td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-5">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-circle-exclamation me-2" style="color:var(--warning);"></i>Recent Complaints</span>
+                <a href="{% url 'complaint_list' %}" class="btn btn-sm btn-outline-secondary">View All</a>
+            </div>
+            <div style="padding:8px 0;">
+                {% for complaint in recent_complaints %}
+                <a href="{% url 'complaint_detail' complaint.pk %}" style="text-decoration:none; display:block; padding:12px 20px; transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-size:13px; font-weight:600; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ complaint.subject }}</div>
+                            <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">{{ complaint.student.name }} · {{ complaint.category }}</div>
+                        </div>
+                        <div class="ms-2">
+                            <span class="badge-status badge-{{ complaint.priority|lower }}">{{ complaint.priority }}</span>
+                        </div>
+                    </div>
+                </a>
+                {% empty %}
+                <div style="text-align:center; color:var(--text-muted); padding:32px; font-size:13px;">No complaints yet</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-3 mt-0">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header"><i class="fas fa-bolt me-2" style="color:var(--warning);"></i>Quick Actions</div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'student_add' %}" class="btn btn-primary"><i class="fas fa-user-plus me-2"></i>Add Student</a>
+                    <a href="{% url 'allocate_room' %}" class="btn btn-outline-secondary"><i class="fas fa-bed me-2"></i>Allocate Room</a>
+                    <a href="{% url 'register_mess' %}" class="btn btn-outline-secondary"><i class="fas fa-utensils me-2"></i>Register Mess</a>
+                    <a href="{% url 'generate_bill' %}" class="btn btn-outline-secondary"><i class="fas fa-file-invoice-dollar me-2"></i>Generate Bills</a>
+                    <a href="{% url 'complaint_add' %}" class="btn btn-outline-secondary"><i class="fas fa-circle-exclamation me-2"></i>Add Complaint</a>
+                    <a href="{% url 'room_add' %}" class="btn btn-outline-secondary"><i class="fas fa-door-open me-2"></i>Add Room</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+{% block content %}
+<div class="page-header"><h1>My Profile</h1><p>Your account and access information</p></div>
+<div class="row g-3" style="max-width:800px;">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-body" style="text-align:center;padding:36px 28px;">
+                <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,{% if is_admin_user %}var(--accent),var(--accent-2){% else %}var(--accent-2),#a855f7{% endif %});display:inline-flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:white;margin-bottom:16px;">
+                    {{ user.username.0|upper }}
+                </div>
+                <div style="font-size:20px;font-weight:800;margin-bottom:4px;">{{ user.get_full_name|default:user.username }}</div>
+                <div style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">{{ user.email|default:"No email set" }}</div>
+                <span class="role-chip {% if is_admin_user %}role-admin{% else %}role-warden{% endif %}" style="font-size:13px;padding:6px 16px;">
+                    <i class="fas fa-{% if is_admin_user %}shield-halved{% else %}user-tie{% endif %}"></i>
+                    {% if is_admin_user %}Administrator{% else %}Warden{% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div class="card mb-3">
+            <div class="card-header"><i class="fas fa-circle-user me-2" style="color:var(--accent);"></i>Account Details</div>
+            <div class="card-body" style="display:grid;gap:14px;">
+                <div class="d-flex justify-content-between"><span style="color:var(--text-secondary);font-size:12px;">Username</span><code style="color:var(--accent);font-family:'JetBrains Mono';">{{ user.username }}</code></div>
+                <div class="d-flex justify-content-between"><span style="color:var(--text-secondary);font-size:12px;">Email</span><span style="font-size:13px;">{{ user.email|default:"—" }}</span></div>
+                <div class="d-flex justify-content-between"><span style="color:var(--text-secondary);font-size:12px;">Last Login</span><span style="font-size:12px;">{{ user.last_login|date:"d M Y, H:i"|default:"—" }}</span></div>
+                <div class="d-flex justify-content-between"><span style="color:var(--text-secondary);font-size:12px;">Member Since</span><span style="font-size:12px;">{{ user.date_joined|date:"d M Y" }}</span></div>
+            </div>
+        </div>
+
+        {% if warden_profile %}
+        <div class="card">
+            <div class="card-header"><i class="fas fa-city me-2" style="color:var(--accent-2);"></i>Block Assignments</div>
+            <div class="card-body">
+                {% if warden_profile.employee_id %}
+                <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">Employee ID: <strong style="color:var(--text-primary);">{{ warden_profile.employee_id }}</strong></div>
+                {% endif %}
+                {% if warden_profile.phone %}
+                <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">Phone: <strong style="color:var(--text-primary);">{{ warden_profile.phone }}</strong></div>
+                {% endif %}
+                <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">Assigned blocks:</div>
+                <div class="d-flex flex-wrap gap-2">
+                {% for block in warden_profile.blocks.all %}
+                    <a href="{% url 'block_detail' block.pk %}" style="text-decoration:none;">
+                        <span class="badge-status badge-active" style="font-size:12px;padding:6px 14px;cursor:pointer;">
+                            <i class="fas fa-city me-1"></i>Block {{ block.name }}
+                            <span style="opacity:0.7;margin-left:4px;font-size:10px;">{{ block.block_type }}</span>
+                        </span>
+                    </a>
+                {% empty %}
+                    <span style="color:var(--text-muted);font-size:13px;">No blocks assigned yet.</span>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-12">
+        <a href="{% url 'logout' %}" class="btn" style="background:rgba(247,83,108,0.1);color:var(--danger);font-weight:600;">
+            <i class="fas fa-right-from-bracket me-2"></i>Logout
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Rooms{% endblock %}
+{% block page_title %}Rooms{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-start">
+    <div><h1>Rooms</h1><p>View and manage all hostel rooms</p></div>
+    <a href="{% url 'room_add' %}" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Add Room</a>
+</div>
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body" style="padding:14px 20px;">
+        <form method="get" class="d-flex gap-2 flex-wrap align-items-end">
+            <div>
+                <label class="form-label" style="margin-bottom:4px;">Block</label>
+                <select name="block" class="form-select form-select-sm">
+                    <option value="">All Blocks</option>
+                    {% for block in blocks %}<option value="{{ block.pk }}" {% if request.GET.block == block.pk|stringformat:"s" %}selected{% endif %}>Block {{ block.name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="form-label" style="margin-bottom:4px;">Status</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All Status</option>
+                    <option value="Available" {% if request.GET.status == 'Available' %}selected{% endif %}>Available</option>
+                    <option value="Occupied" {% if request.GET.status == 'Occupied' %}selected{% endif %}>Occupied</option>
+                    <option value="Maintenance" {% if request.GET.status == 'Maintenance' %}selected{% endif %}>Maintenance</option>
+                </select>
+            </div>
+            <div style="padding-top:18px;">
+                <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+                <a href="{% url 'room_list' %}" class="btn btn-outline-secondary btn-sm ms-1">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header"><i class="fas fa-door-open me-2" style="color:var(--accent);"></i>{{ rooms|length }} Room{{ rooms|length|pluralize }}</div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Room</th><th>Block</th><th>Floor</th><th>Type</th><th>Beds</th><th>Rent/Month</th><th>Amenities</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for room in rooms %}
+            <tr>
+                <td><strong style="color:var(--accent);">{{ room.room_number }}</strong></td>
+                <td>Block {{ room.block.name }}</td>
+                <td>Floor {{ room.floor }}</td>
+                <td style="font-size:12px;">{{ room.room_type }}</td>
+                <td>
+                    <span style="font-size:12px;">{{ room.current_occupants }}/{{ room.capacity }}</span>
+                    <div style="background:var(--bg-primary);border-radius:4px;height:4px;width:60px;margin-top:4px;overflow:hidden;">
+                        <div style="background:{% if room.available_beds == 0 %}var(--danger){% else %}var(--success){% endif %};height:100%;width:{% widthratio room.current_occupants room.capacity 100 %}%;"></div>
+                    </div>
+                </td>
+                <td>₹{{ room.monthly_rent }}</td>
+                <td style="font-size:13px;">
+                    {% if room.has_ac %}❄️{% endif %}{% if room.has_wifi %}📶{% endif %}{% if room.has_attached_bathroom %}🚿{% endif %}
+                </td>
+                <td><span class="badge-status badge-{{ room.status|lower|cut:' ' }}">{{ room.status }}</span></td>
+                <td><a href="{% url 'room_detail' room.pk %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye"></i></a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:48px;">
+                <i class="fas fa-door-open" style="font-size:36px;display:block;margin-bottom:12px;opacity:0.25;"></i>
+                No rooms found. <a href="{% url 'room_add' %}">Add rooms</a>
+            </td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

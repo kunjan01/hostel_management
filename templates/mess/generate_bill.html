@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Generate Bills{% endblock %}
+{% block page_title %}Generate Monthly Bills{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Generate Monthly Bills</h1><p>Create monthly bills for mess and hostel room charges</p></div>
+<div style="max-width:480px;">
+<div class="card">
+    <div class="card-header"><i class="fas fa-file-invoice-dollar me-2" style="color:var(--warning);"></i>Bill Generation</div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Month *</label>
+                <select name="month" class="form-select" required>
+                    {% for num, name in months %}<option value="{{ num }}">{{ name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Year *</label>
+                <input type="number" name="year" class="form-control" value="{{ current_year }}" min="2020" max="2030" required>
+            </div>
+            <div style="background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);border-radius:8px;padding:12px;margin-bottom:20px;font-size:12.5px;color:var(--warning);">
+                <i class="fas fa-info-circle me-2"></i><strong>Bills will be generated for:</strong>
+                <ul style="margin-top:8px;margin-bottom:0;padding-left:20px;">
+                    <li><strong>Mess Bills:</strong> All actively registered mess students</li>
+                    <li><strong>Room Bills:</strong> All students with active hostel room allocations</li>
+                </ul>
+                <div style="margin-top:8px;">Existing bills for the same month/year will be skipped.</div>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-bolt me-2"></i>Generate Bills</button>
+                <a href="{% url 'bill_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}

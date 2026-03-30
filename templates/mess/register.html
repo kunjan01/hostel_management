@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Register for Mess{% endblock %}
+{% block page_title %}Register Student for Mess{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Mess Registration</h1><p>Register a student for mess facility</p></div>
+<div style="max-width:580px;">
+<div class="card">
+    <div class="card-header"><i class="fas fa-utensils me-2" style="color:var(--accent);"></i>Registration Form</div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Select Student *</label>
+                <select name="student" class="form-select" required>
+                    <option value="">-- Select Student --</option>
+                    {% for student in students %}<option value="{{ student.pk }}">{{ student.name }} ({{ student.enrollment_no }})</option>{% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Meal Plan *</label>
+                <select name="plan" class="form-select" required onchange="updateCharge(this)">
+                    <option value="Full">Full Day (Breakfast + Lunch + Snacks + Dinner)</option>
+                    <option value="Lunch_Dinner">Lunch + Dinner</option>
+                    <option value="Breakfast_Lunch">Breakfast + Lunch</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Monthly Charge (₹) *</label>
+                <input type="number" name="monthly_charge" id="chargeInput" class="form-control" value="3500" min="0" step="100" required>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-check me-2"></i>Register</button>
+                <a href="{% url 'registration_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+<script>
+function updateCharge(sel) {
+    const charges = {Full: 3500, Lunch_Dinner: 2800, Breakfast_Lunch: 2200};
+    document.getElementById('chargeInput').value = charges[sel.value] || 3500;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Bills{% endblock %}
+{% block page_title %}Student Bills - Mess & Hostel{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-start">
+    <div><h1>Student Bills</h1><p>Complete billing for mess and hostel room charges</p></div>
+    <a href="{% url 'generate_bill' %}" class="btn btn-primary"><i class="fas fa-file-invoice-dollar me-2"></i>Generate Bills</a>
+</div>
+<div class="card">
+    <div class="card-header"><i class="fas fa-file-invoice-dollar me-2" style="color:var(--warning);"></i>{{ bills|length }} Bill{{ bills|length|pluralize }} (Mess + Hostel)</div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Student</th><th>Month/Year</th><th>Mess Bill</th><th>Room Bill</th><th>Total Amount</th><th>Due Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for bill in bills %}
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="student-avatar" style="width:30px;height:30px;font-size:12px;">{{ bill.student.name.0 }}</div>
+                        <div style="font-weight:600;font-size:13px;">{{ bill.student.name }}</div>
+                    </div>
+                </td>
+                <td>
+                    {% if bill.mess_bill %}
+                        {{ bill.mess_bill.get_month_display }} {{ bill.year }}
+                    {% elif bill.room_bill %}
+                        {{ bill.room_bill.get_month_display }} {{ bill.year }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if bill.mess_bill %}
+                    <span style="font-weight:600;color:var(--accent);">₹{{ bill.mess_bill.amount }}</span>
+                    {% else %}
+                    <span style="color:var(--text-muted);">—</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if bill.room_bill %}
+                    <span style="font-weight:600;color:var(--accent);">₹{{ bill.room_bill.room_rent }}</span>
+                    {% else %}
+                    <span style="color:var(--text-muted);">—</span>
+                    {% endif %}
+                </td>
+                <td style="font-weight:700;font-size:14px;color:var(--accent);">₹{{ bill.total }}</td>
+                <td style="font-size:12px;color:var(--text-secondary);">
+                    {% if bill.mess_bill %}
+                    {{ bill.mess_bill.due_date }}
+                    {% elif bill.room_bill %}
+                    {{ bill.room_bill.due_date }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if bill.mess_bill and bill.room_bill %}
+                        {% if bill.mess_bill.status == bill.room_bill.status %}
+                        <span class="badge-status badge-{{ bill.mess_bill.status|lower }}">{{ bill.mess_bill.status }}</span>
+                        {% else %}
+                        <span class="badge-status badge-overdue">Split Status</span>
+                        {% endif %}
+                    {% elif bill.mess_bill %}
+                    <span class="badge-status badge-{{ bill.mess_bill.status|lower }}">{{ bill.mess_bill.status }}</span>
+                    {% elif bill.room_bill %}
+                    <span class="badge-status badge-{{ bill.room_bill.status|lower }}">{{ bill.room_bill.status }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if bill.mess_bill and bill.mess_bill.status != 'Paid' %}
+                    <form method="POST" action="{% url 'mark_paid' bill.mess_bill.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm" style="background:rgba(16,212,142,0.1);color:var(--success);font-size:11px;padding:4px 8px;border:none;cursor:pointer;">
+                            <i class="fas fa-check me-1"></i>Mess
+                        </button>
+                    </form>
+                    {% endif %}
+                    {% if bill.room_bill and bill.room_bill.status != 'Paid' %}
+                    <form method="POST" action="{% url 'mark_paid_room' bill.room_bill.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm" style="background:rgba(16,212,142,0.1);color:var(--success);font-size:11px;padding:4px 8px;border:none;cursor:pointer;">
+                            <i class="fas fa-check me-1"></i>Room
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:48px;">
+                No bills generated. <a href="{% url 'generate_bill' %}">Generate now</a>
+            </td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

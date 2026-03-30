@@ -1,0 +1,80 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+coverage.xml
+*.cover
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+/media
+/staticfiles
+/static/admin
+/static/rest_framework
+
+# Environment & Configuration
+.env
+.env.local
+.env.*.local
+env_vars.txt
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# SSL Certificates
+ssl/*.pem
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+node_modules/
+npm-debug.log
+.bundle
+.cache
+.sass-cache

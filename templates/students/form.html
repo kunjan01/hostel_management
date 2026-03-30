@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>{{ title }}</h1>
+    <p>Fill in the student information below</p>
+</div>
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<div class="row g-3">
+    <div class="col-xl-8">
+        <div class="card mb-3">
+            <div class="card-header"><i class="fas fa-user me-2" style="color:var(--accent);"></i>Personal Information</div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6"><label class="form-label">Full Name *</label><input type="text" name="name" class="form-control" value="{{ student.name|default:'' }}" required placeholder="Enter full name"></div>
+                    <div class="col-md-6"><label class="form-label">Enrollment No. *</label><input type="text" name="enrollment_no" class="form-control" value="{{ student.enrollment_no|default:'' }}" {% if student %}readonly style="opacity:0.6"{% endif %} required placeholder="e.g. 21CS001"></div>
+                    <div class="col-md-6"><label class="form-label">Email *</label><input type="email" name="email" class="form-control" value="{{ student.email|default:'' }}" required placeholder="student@college.edu"></div>
+                    <div class="col-md-6"><label class="form-label">Phone *</label><input type="text" name="phone" class="form-control" value="{{ student.phone|default:'' }}" required placeholder="+91 9999999999"></div>
+                    <div class="col-md-4"><label class="form-label">Gender *</label>
+                        <select name="gender" class="form-select" required>
+                            <option value="">-- Select --</option>
+                            <option value="M" {% if student.gender == 'M' %}selected{% endif %}>Male</option>
+                            <option value="F" {% if student.gender == 'F' %}selected{% endif %}>Female</option>
+                            <option value="O" {% if student.gender == 'O' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4"><label class="form-label">Date of Birth *</label><input type="date" name="date_of_birth" class="form-control" value="{{ student.date_of_birth|default:'' }}" required></div>
+                    <div class="col-md-4"><label class="form-label">Blood Group</label>
+                        <select name="blood_group" class="form-select">
+                            <option value="">-- Select --</option>
+                            <option value="A+" {% if student.blood_group == 'A+' %}selected{% endif %}>A+</option>
+                            <option value="A-" {% if student.blood_group == 'A-' %}selected{% endif %}>A-</option>
+                            <option value="B+" {% if student.blood_group == 'B+' %}selected{% endif %}>B+</option>
+                            <option value="B-" {% if student.blood_group == 'B-' %}selected{% endif %}>B-</option>
+                            <option value="O+" {% if student.blood_group == 'O+' %}selected{% endif %}>O+</option>
+                            <option value="O-" {% if student.blood_group == 'O-' %}selected{% endif %}>O-</option>
+                            <option value="AB+" {% if student.blood_group == 'AB+' %}selected{% endif %}>AB+</option>
+                            <option value="AB-" {% if student.blood_group == 'AB-' %}selected{% endif %}>AB-</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header"><i class="fas fa-graduation-cap me-2" style="color:var(--accent-2);"></i>Academic Information</div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4"><label class="form-label">Course *</label>
+                        <select name="course" class="form-select" required>
+                            <option value="">-- Select --</option>
+                            <option value="BTech" {% if student.course == 'BTech' %}selected{% endif %}>B.Tech</option>
+                            <option value="MTech" {% if student.course == 'MTech' %}selected{% endif %}>M.Tech</option>
+                            <option value="MBA" {% if student.course == 'MBA' %}selected{% endif %}>MBA</option>
+                            <option value="MCA" {% if student.course == 'MCA' %}selected{% endif %}>MCA</option>
+                            <option value="BCA" {% if student.course == 'BCA' %}selected{% endif %}>BCA</option>
+                            <option value="BSc" {% if student.course == 'BSc' %}selected{% endif %}>B.Sc</option>
+                            <option value="MSc" {% if student.course == 'MSc' %}selected{% endif %}>M.Sc</option>
+                            <option value="BA" {% if student.course == 'BA' %}selected{% endif %}>B.A</option>
+                            <option value="MA" {% if student.course == 'MA' %}selected{% endif %}>M.A</option>
+                            <option value="BPharm" {% if student.course == 'BPharm' %}selected{% endif %}>B.Pharm</option>
+                            <option value="Other" {% if student.course == 'Other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4"><label class="form-label">Year *</label>
+                        <select name="year" class="form-select" required>
+                            <option value="">-- Select --</option>
+                            <option value="1" {% if student.year == 1 %}selected{% endif %}>1st Year</option>
+                            <option value="2" {% if student.year == 2 %}selected{% endif %}>2nd Year</option>
+                            <option value="3" {% if student.year == 3 %}selected{% endif %}>3rd Year</option>
+                            <option value="4" {% if student.year == 4 %}selected{% endif %}>4th Year</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4"><label class="form-label">Branch *</label><input type="text" name="branch" class="form-control" value="{{ student.branch|default:'' }}" required placeholder="e.g. Computer Science"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header"><i class="fas fa-location-dot me-2" style="color:var(--success);"></i>Address</div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-12"><label class="form-label">Full Address *</label><textarea name="address" class="form-control" rows="2" required placeholder="Street, Area...">{{ student.address|default:'' }}</textarea></div>
+                    <div class="col-md-6"><label class="form-label">City *</label><input type="text" name="city" class="form-control" value="{{ student.city|default:'' }}" required></div>
+                    <div class="col-md-6"><label class="form-label">State *</label><input type="text" name="state" class="form-control" value="{{ student.state|default:'' }}" required></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><i class="fas fa-phone me-2" style="color:var(--warning);"></i>Guardian &amp; Emergency Contact</div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4"><label class="form-label">Parent / Guardian Name *</label><input type="text" name="parent_name" class="form-control" value="{{ student.parent_name|default:'' }}" required></div>
+                    <div class="col-md-4"><label class="form-label">Parent Phone *</label><input type="text" name="parent_phone" class="form-control" value="{{ student.parent_phone|default:'' }}" required></div>
+                    <div class="col-md-4"><label class="form-label">Emergency Contact</label><input type="text" name="emergency_contact" class="form-control" value="{{ student.emergency_contact|default:'' }}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="card sticky-top" style="top:80px;">
+            <div class="card-header"><i class="fas fa-image me-2"></i>Profile Photo</div>
+            <div class="card-body" style="text-align:center; padding:28px;">
+                {% if student.photo %}
+                <img src="{{ student.photo.url }}" id="photoPreview" style="width:110px;height:110px;border-radius:50%;object-fit:cover;margin-bottom:16px;border:3px solid var(--border);">
+                {% else %}
+                <div id="photoDefault" style="width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:inline-flex;align-items:center;justify-content:center;font-size:40px;color:white;margin-bottom:16px;">
+                    <i class="fas fa-user"></i>
+                </div>
+                <img id="photoPreview" style="display:none;width:110px;height:110px;border-radius:50%;object-fit:cover;margin-bottom:16px;border:3px solid var(--border);">
+                {% endif %}
+                <input type="file" name="photo" class="form-control" accept="image/*" id="photoInput">
+                <div style="color:var(--text-muted);font-size:11px;margin-top:8px;">JPG, PNG up to 2MB</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-flex gap-2 mt-3">
+    <button type="submit" class="btn btn-primary px-4"><i class="fas fa-save me-2"></i>{{ action }} Student</button>
+    <a href="{% url 'student_list' %}" class="btn btn-outline-secondary">Cancel</a>
+</div>
+</form>
+<script>
+document.getElementById('photoInput').addEventListener('change', function(e) {
+    if (e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const preview = document.getElementById('photoPreview');
+            const def = document.getElementById('photoDefault');
+            preview.src = ev.target.result;
+            preview.style.display = 'inline-block';
+            if (def) def.style.display = 'none';
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #5cb85c; color: white; padding: 15px; border-radius: 5px; text-align: center; }
+        .content { margin: 20px 0; }
+        .bill-box { background-color: #f0f8f0; padding: 15px; border-left: 4px solid #5cb85c; margin: 15px 0; }
+        .footer { color: #999; font-size: 12px; text-align: center; margin-top: 30px; }
+        .button { background-color: #5cb85c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 3px; display: inline-block; }
+        .amount { font-size: 24px; color: #5cb85c; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>✓ {{ bill_type }} Bill Generated</h2>
+        </div>
+        
+        <div class="content">
+            <p>Dear <strong>{{ student_name }}</strong>,</p>
+            
+            <p>Your <strong>{{ bill_type }}</strong> bill for <strong>{{ month }} {{ year }}</strong> has been generated.</p>
+            
+            <div class="bill-box">
+                <h3>Bill Details:</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td><strong>Enrollment Number:</strong></td>
+                        <td>{{ enrollment_no }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bill Type:</strong></td>
+                        <td>{{ bill_type }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Period:</strong></td>
+                        <td>{{ month }} {{ year }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bill Amount:</strong></td>
+                        <td class="amount">₹{{ amount }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Due Date:</strong></td>
+                        <td><span style="color: #d9534f;">{{ due_date }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bill ID:</strong></td>
+                        <td>#{{ bill_id }}</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <p><strong>Important:</strong> Please ensure payment is made by the due date to avoid late fees.</p>
+            
+            <p>
+                For payment or to view your bill details, please contact:
+                <br><strong>Email:</strong> {{ contact_email }}
+            </p>
+            
+            <p>If you have any questions or discrepancies regarding this bill, please reach out to the hostel management immediately.</p>
+            
+            <p>Best regards,<br>Hostel Management Team</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated email from Hostel Management System. Please do not reply.</p>
+        </div>
+    </div>
+</body>
+</html>

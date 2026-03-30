@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Allocate Room{% endblock %}
+{% block page_title %}Allocate Room{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Allocate Room</h1><p>Assign a room to a student</p></div>
+<div style="max-width:620px;">
+<div class="card">
+    <div class="card-header"><i class="fas fa-bed me-2" style="color:var(--accent);"></i>Room Allocation</div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Select Student *</label>
+                <select name="student" class="form-select" required>
+                    <option value="">-- Select Student --</option>
+                    {% for student in students %}<option value="{{ student.pk }}">{{ student.name }} ({{ student.enrollment_no }}) — {{ student.get_course_display }}</option>{% endfor %}
+                </select>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Only showing students without an active allocation.</div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Select Room *</label>
+                <select name="room" class="form-select" required>
+                    <option value="">-- Select Room --</option>
+                    {% for room in rooms %}
+                    <option value="{{ room.pk }}" {% if room.available_beds == 0 %}disabled{% endif %}>
+                        Block {{ room.block.name }} — Room {{ room.room_number }} ({{ room.room_type }}) · {{ room.available_beds }} bed{{ room.available_beds|pluralize }} free · ₹{{ room.monthly_rent }}/mo
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-check me-2"></i>Confirm Allocation</button>
+                <a href="{% url 'allocation_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}

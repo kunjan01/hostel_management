@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Complaint #{{ complaint.pk }}{% endblock %}
+{% block page_title %}Complaint Detail{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-start">
+    <div><h1>Complaint #{{ complaint.pk }}</h1><p>{{ complaint.subject }}</p></div>
+    <a href="{% url 'complaint_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Back</a>
+</div>
+<div class="row g-3">
+    <div class="col-xl-8">
+        <div class="card mb-3">
+            <div class="card-header"><i class="fas fa-circle-info me-2" style="color:var(--accent);"></i>Complaint Info</div>
+            <div class="card-body">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Student</div>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="student-avatar" style="width:32px;height:32px;font-size:13px;">{{ complaint.student.name.0 }}</div>
+                            <div>
+                                <div style="font-weight:600;font-size:13px;">{{ complaint.student.name }}</div>
+                                <div style="font-size:11px;color:var(--text-secondary);">{{ complaint.student.enrollment_no }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Category</div><div style="font-weight:600;">{{ complaint.category }}</div></div>
+                    <div class="col-md-3"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Submitted</div><div style="font-size:12px;">{{ complaint.created_at|date:"d M Y, H:i" }}</div></div>
+                </div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;">Subject</div>
+                <div style="font-size:15px;font-weight:700;margin-bottom:16px;">{{ complaint.subject }}</div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;">Description</div>
+                <div style="font-size:13.5px;line-height:1.7;background:var(--bg-primary);padding:14px;border-radius:8px;border:1px solid var(--border);">{{ complaint.description }}</div>
+                {% if complaint.admin_remarks %}
+                <div style="margin-top:16px;">
+                    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;">Admin Remarks</div>
+                    <div style="font-size:13.5px;line-height:1.7;background:rgba(79,142,247,0.05);padding:14px;border-radius:8px;border:1px solid rgba(79,142,247,0.15);">{{ complaint.admin_remarks }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Update Status -->
+        <div class="card">
+            <div class="card-header"><i class="fas fa-pen me-2" style="color:var(--accent-2);"></i>Update Status</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="Pending" {% if complaint.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="In Progress" {% if complaint.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                <option value="Resolved" {% if complaint.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                                <option value="Rejected" {% if complaint.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Admin Remarks</label>
+                            <textarea name="admin_remarks" class="form-control" rows="3" placeholder="Add remarks or resolution notes...">{{ complaint.admin_remarks }}</textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-save me-2"></i>Update Complaint</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="card">
+            <div class="card-header"><i class="fas fa-tag me-2"></i>Status &amp; Priority</div>
+            <div class="card-body" style="display:grid;gap:16px;">
+                <div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;">Current Status</div>
+                    <span class="badge-status {% if complaint.status == 'Pending' %}badge-pending{% elif complaint.status == 'In Progress' %}badge-active{% elif complaint.status == 'Resolved' %}badge-resolved{% else %}badge-occupied{% endif %}" style="font-size:13px;padding:6px 14px;">{{ complaint.status }}</span>
+                </div>
+                <div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;">Priority</div>
+                    <span class="badge-status badge-{{ complaint.priority|lower }}" style="font-size:13px;padding:6px 14px;">{{ complaint.priority }}</span>
+                </div>
+                {% if complaint.resolved_at %}
+                <div>
+                    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Resolved At</div>
+                    <div style="font-size:12px;">{{ complaint.resolved_at|date:"d M Y, H:i" }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

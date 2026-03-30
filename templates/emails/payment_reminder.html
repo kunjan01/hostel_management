@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #0275d8; color: white; padding: 15px; border-radius: 5px; text-align: center; }
+        .content { margin: 20px 0; }
+        .bill-details { background-color: #e3f2fd; padding: 15px; border-left: 4px solid #0275d8; margin: 15px 0; }
+        .footer { color: #999; font-size: 12px; text-align: center; margin-top: 30px; }
+        .button { background-color: #0275d8; color: white; padding: 10px 20px; text-decoration: none; border-radius: 3px; display: inline-block; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>💳 Monthly Billing Reminder</h2>
+        </div>
+        
+        <div class="content">
+            <p>Dear <strong>{{ student_name }}</strong>,</p>
+            
+            <p>This is a courtesy reminder for your monthly bill payments.</p>
+            
+            <div class="bill-details">
+                <h3>Current Bill Status:</h3>
+                <p><strong>Mess Bills:</strong> {{ mess_bills_count }} pending</p>
+                <p><strong>Room Bills:</strong> {{ room_bills_count }} pending</p>
+                <p style="color: #d9534f; font-weight: bold;">Total Pending Amount: ₹{{ total_pending }}</p>
+            </div>
+            
+            <p><strong>Enrollment Number:</strong> {{ enrollment_no }}</p>
+            
+            <p><strong>Payment Instructions:</strong></p>
+            <ul>
+                <li>Log in to the payment portal using your credentials</li>
+                <li>Review your bill details</li>
+                <li>Complete the payment within the specified timeframe</li>
+                <li>You will receive a payment confirmation email</li>
+            </ul>
+            
+            <a href="{{ payment_portal_url }}" class="button">Make Payment Now</a>
+            
+            <p><strong>Payment Methods Accepted:</strong></p>
+            <ul>
+                <li>Bank Transfer</li>
+                <li>Online Payment Gateway</li>
+                <li>Check/Demand Draft</li>
+            </ul>
+            
+            <p>For any queries or assistance with payment, please contact:
+                <br><strong>Email:</strong> {{ contact_email }}
+            </p>
+            
+            <p>Best regards,<br>Hostel Management Team</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated email from Hostel Management System. Please do not reply.</p>
+        </div>
+    </div>
+</body>
+</html>

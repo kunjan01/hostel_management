@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block title %}{{ student.name }}{% endblock %}
+{% block page_title %}Student Profile{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-start">
+    <div>
+        <h1>Student Profile</h1>
+        <p>Full details for {{ student.name }}</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% url 'student_edit' student.pk %}" class="btn btn-primary"><i class="fas fa-pen me-2"></i>Edit</a>
+        <a href="{% url 'student_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Back</a>
+    </div>
+</div>
+<div class="row g-3">
+    <!-- Left: Profile Card -->
+    <div class="col-xl-3">
+        <div class="card mb-3" style="text-align:center; padding:28px 20px;">
+            {% if student.photo %}
+            <img src="{{ student.photo.url }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;margin:0 auto 16px;border:3px solid var(--border);">
+            {% else %}
+            <div style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:inline-flex;align-items:center;justify-content:center;font-size:34px;color:white;margin:0 auto 16px;">{{ student.name.0 }}</div>
+            {% endif %}
+            <div style="font-size:17px;font-weight:800;margin-bottom:4px;">{{ student.name }}</div>
+            <code style="color:var(--accent);font-family:'JetBrains Mono';font-size:12px;">{{ student.enrollment_no }}</code>
+            <div style="margin-top:12px;">
+                <span class="badge-status badge-active">Active</span>
+                {% if student.blood_group %}<span class="badge-status badge-pending ms-1">{{ student.blood_group }}</span>{% endif %}
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" style="font-size:12px;"><i class="fas fa-bed me-2" style="color:var(--accent);"></i>Room Status</div>
+            <div class="card-body">
+                {% if allocation %}
+                <div style="font-size:13px; font-weight:600; color:var(--success); margin-bottom:8px;"><i class="fas fa-check-circle me-1"></i>Room Allocated</div>
+                <div style="font-size:12px; color:var(--text-secondary); line-height:1.8;">
+                    <div>Block: <strong style="color:var(--text-primary);">{{ allocation.room.block.name }}</strong></div>
+                    <div>Room: <strong style="color:var(--text-primary);">{{ allocation.room.room_number }}</strong></div>
+                    <div>Floor: <strong style="color:var(--text-primary);">{{ allocation.room.floor }}</strong></div>
+                    <div>Since: <strong style="color:var(--text-primary);">{{ allocation.allocation_date }}</strong></div>
+                </div>
+                {% else %}
+                <div style="font-size:13px; color:var(--text-muted); text-align:center; padding:12px 0;">
+                    <i class="fas fa-bed" style="display:block;font-size:22px;margin-bottom:8px;opacity:0.3;"></i>
+                    No room allocated
+                </div>
+                <a href="{% url 'allocate_room' %}" class="btn btn-sm btn-primary w-100 mt-1">Allocate Room</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Right: Details -->
+    <div class="col-xl-9">
+        <div class="row g-3">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-user me-2" style="color:var(--accent);"></i>Personal Details</div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">Email</div><div style="font-size:13px;font-weight:500;">{{ student.email }}</div></div>
+                            <div class="col-md-3"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">Phone</div><div style="font-size:13px;font-weight:500;">{{ student.phone }}</div></div>
+                            <div class="col-md-3"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">Gender</div><div style="font-size:13px;font-weight:500;">{{ student.get_gender_display }}</div></div>
+                            <div class="col-md-3"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">Date of Birth</div><div style="font-size:13px;font-weight:500;">{{ student.date_of_birth }}</div></div>
+                            <div class="col-md-3"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">Course</div><div style="font-size:13px;font-weight:500;">{{ student.get_course_display }}</div></div>
+                            <div class="col-md-3"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">Year</div><div style="font-size:13px;font-weight:500;">Year {{ student.year }}</div></div>
+                            <div class="col-md-3"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">Branch</div><div style="font-size:13px;font-weight:500;">{{ student.branch }}</div></div>
+                            <div class="col-md-3"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">Joined</div><div style="font-size:13px;font-weight:500;">{{ student.joining_date }}</div></div>
+                            <div class="col-md-6"><div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">Address</div><div style="font-size:13px;font-weight:500;">{{ student.address }}, {{ student.city }}, {{ student.state }}</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-phone me-2" style="color:var(--warning);"></i>Guardian Details</div>
+                    <div class="card-body">
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">Parent / Guardian</div>
+                        <div style="font-size:14px;font-weight:600;margin-bottom:12px;">{{ student.parent_name }}</div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">Phone</div>
+                        <div style="font-size:14px;font-weight:600;">{{ student.parent_phone }}</div>
+                        {% if student.emergency_contact %}
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:12px;margin-bottom:3px;">Emergency</div>
+                        <div style="font-size:14px;font-weight:600;">{{ student.emergency_contact }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-utensils me-2" style="color:var(--success);"></i>Mess Status</div>
+                    <div class="card-body">
+                        {% if mess_reg %}
+                        <div style="font-size:13px; font-weight:600; color:var(--success); margin-bottom:10px;"><i class="fas fa-check-circle me-1"></i>Mess Registered</div>
+                        <div style="font-size:12px; color:var(--text-secondary); line-height:2;">
+                            <div>Plan: <strong style="color:var(--text-primary);">{{ mess_reg.get_plan_display }}</strong></div>
+                            <div>Monthly: <strong style="color:var(--text-primary);">₹{{ mess_reg.monthly_charge }}</strong></div>
+                        </div>
+                        {% else %}
+                        <div style="font-size:13px; color:var(--text-muted); text-align:center; padding:10px 0;">
+                            <i class="fas fa-utensils" style="display:block;font-size:22px;margin-bottom:8px;opacity:0.3;"></i>
+                            Not registered for mess
+                        </div>
+                        <a href="{% url 'register_mess' %}" class="btn btn-sm btn-primary w-100 mt-1">Register for Mess</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if bills %}
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-file-invoice-dollar me-2" style="color:var(--warning);"></i>Recent Bills</div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead><tr><th>Month / Year</th><th>Amount</th><th>Due Date</th><th>Status</th></tr></thead>
+                            <tbody>
+                            {% for bill in bills %}
+                            <tr>
+                                <td>{{ bill.get_month_display }} {{ bill.year }}</td>
+                                <td>₹{{ bill.amount }}</td>
+                                <td>{{ bill.due_date }}</td>
+                                <td><span class="badge-status badge-{{ bill.status|lower }}">{{ bill.status }}</span></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

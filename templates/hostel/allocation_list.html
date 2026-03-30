@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Allocations{% endblock %}
+{% block page_title %}Room Allocations{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-start">
+    <div><h1>Room Allocations</h1><p>All active student room assignments</p></div>
+    <a href="{% url 'allocate_room' %}" class="btn btn-primary"><i class="fas fa-plus me-2"></i>New Allocation</a>
+</div>
+<div class="card">
+    <div class="card-header"><i class="fas fa-key me-2" style="color:var(--accent);"></i>{{ allocations|length }} Active Allocation{{ allocations|length|pluralize }}</div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Student</th><th>Block</th><th>Room</th><th>Type</th><th>Allocated On</th><th>Rent/Month</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for alloc in allocations %}
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="student-avatar">{{ alloc.student.name.0 }}</div>
+                        <div>
+                            <div style="font-weight:600;font-size:13px;">{{ alloc.student.name }}</div>
+                            <div style="color:var(--text-secondary);font-size:11px;">{{ alloc.student.enrollment_no }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>Block {{ alloc.room.block.name }}</td>
+                <td><strong style="color:var(--accent);">{{ alloc.room.room_number }}</strong></td>
+                <td style="font-size:12px;">{{ alloc.room.room_type }}</td>
+                <td style="font-size:12px;color:var(--text-secondary);">{{ alloc.allocation_date }}</td>
+                <td>₹{{ alloc.room.monthly_rent }}</td>
+                <td>
+                    <div class="d-flex gap-1">
+                        <a href="{% url 'student_detail' alloc.student.pk %}" class="btn btn-sm btn-outline-secondary" title="View Student"><i class="fas fa-user"></i></a>
+                        <a href="{% url 'vacate_room' alloc.pk %}" class="btn btn-sm" style="background:rgba(247,83,108,0.1);color:var(--danger);" title="Vacate"><i class="fas fa-right-from-bracket"></i></a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:48px;">
+                <i class="fas fa-bed" style="font-size:36px;display:block;margin-bottom:12px;opacity:0.25;"></i>
+                No active allocations. <a href="{% url 'allocate_room' %}">Allocate a room</a>
+            </td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

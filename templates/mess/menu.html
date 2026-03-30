@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Mess Menu{% endblock %}
+{% block page_title %}Mess Menu{% endblock %}
+{% block content %}
+<style>
+    .meal-breakfast { color: var(--warning); }
+    .meal-lunch { color: var(--accent); }
+    .meal-snacks { color: var(--success); }
+    .meal-dinner { color: var(--accent-2); }
+    .day-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+    }
+    .day-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+    .day-header {
+        background: linear-gradient(135deg, rgba(79,142,247,0.1), rgba(124,92,191,0.1));
+        padding: 16px;
+        border-bottom: 1px solid var(--border);
+        font-weight: 700;
+        font-size: 15px;
+    }
+    .meal-section {
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .meal-section:last-child {
+        border-bottom: none;
+    }
+    .meal-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .meal-items {
+        font-size: 13px;
+        color: var(--text-primary);
+        line-height: 1.5;
+        margin: 6px 0;
+    }
+    .meal-timing {
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-top: 4px;
+    }
+    .no-menu {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-style: italic;
+    }
+</style>
+
+<div class="page-header d-flex justify-content-between align-items-start">
+    <div>
+        <h1>📅 Weekly Mess Menu</h1>
+        <p>Current meal schedule for all days</p>
+    </div>
+    <a href="{% url 'menu_update' %}" class="btn btn-primary"><i class="fas fa-pen me-2"></i>Edit Menu</a>
+</div>
+
+<div class="row g-3">
+{% for day in days %}
+<div class="col-lg-3 col-md-6">
+    <div class="day-card">
+        <div class="day-header">
+            <i class="fas fa-calendar-alt me-2" style="color:var(--accent);"></i>{{ day }}
+        </div>
+        <div>
+            {% for meal_name in meals %}
+            <div class="meal-section">
+                <div class="meal-label meal-{{ meal_name|lower }}">
+                    {% if meal_name == 'Breakfast' %}🌅
+                    {% elif meal_name == 'Lunch' %}☀️
+                    {% elif meal_name == 'Snacks' %}🍵
+                    {% else %}🌙
+                    {% endif %}
+                    {{ meal_name }}
+                </div>
+                {% with found=False %}
+                    {% for item in menu_list %}
+                        {% if item.day == day and item.meal == meal_name %}
+                            <div class="meal-items">{{ item.items }}</div>
+                            {% if item.timing %}<div class="meal-timing">⏰ {{ item.timing }}</div>{% endif %}
+                            {% with found=True %}{% endwith %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if not found %}
+                    <div class="no-menu">No menu set</div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+
+{% if not menu or menu|length == 0 %}
+<div style="margin-top: 40px; padding: 30px; background: rgba(79,142,247,0.1); border-radius: 12px; border: 1px solid var(--border); text-align: center;">
+    <i class="fas fa-info-circle me-2" style="color:var(--accent);"></i>
+    <strong>No menu items added yet.</strong>
+    <p style="margin-top: 10px; color:var(--text-secondary);">Contact the admin to set up the weekly mess menu.</p>
+</div>
+{% endif %}
+
+{% endblock %}

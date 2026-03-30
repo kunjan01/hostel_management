@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>{{ title }}</h1>
+    <p>{% if wp %}Update warden details and block assignments{% else %}Create a new warden account with block-level access{% endif %}</p>
+</div>
+
+<div class="row g-3">
+<div class="col-xl-7">
+    <form method="post">
+    {% csrf_token %}
+    <div class="card mb-3">
+        <div class="card-header"><i class="fas fa-user-tie me-2" style="color:var(--accent-2);"></i>Personal Information</div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">First Name *</label>
+                    <input type="text" name="first_name" class="form-control" value="{{ wp.user.first_name|default:'' }}" required placeholder="e.g. Ramesh">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Last Name *</label>
+                    <input type="text" name="last_name" class="form-control" value="{{ wp.user.last_name|default:'' }}" required placeholder="e.g. Sharma">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" value="{{ wp.user.email|default:'' }}" placeholder="warden@hostel.edu">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    <input type="text" name="phone" class="form-control" value="{{ wp.phone|default:'' }}" placeholder="+91 9999999999">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Employee ID</label>
+                    <input type="text" name="employee_id" class="form-control" value="{{ wp.employee_id|default:'' }}" placeholder="e.g. EMP001">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header"><i class="fas fa-key me-2" style="color:var(--warning);"></i>Login Credentials</div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Username *</label>
+                    <input type="text" name="username" class="form-control"
+                        value="{{ wp.user.username|default:'' }}"
+                        {% if wp %}readonly style="opacity:0.6"{% else %}required{% endif %}
+                        placeholder="e.g. warden_a">
+                    {% if wp %}<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Username cannot be changed after creation.</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Password {% if not wp %}*{% else %}(leave blank to keep){% endif %}</label>
+                    <input type="password" name="password" class="form-control"
+                        {% if not wp %}required{% endif %}
+                        placeholder="{% if wp %}Leave blank to keep current{% else %}Set a strong password{% endif %}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header"><i class="fas fa-city me-2" style="color:var(--accent);"></i>Assign Blocks</div>
+        <div class="card-body">
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">Select which blocks this warden can manage. They will only see data from these blocks when logged in.</p>
+            <div class="row g-2">
+            {% for block in blocks %}
+            <div class="col-md-6">
+                <label style="display:flex;align-items:center;gap:10px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;padding:12px 14px;cursor:pointer;transition:border-color 0.15s;" class="block-checkbox-label">
+                    <input type="checkbox" name="blocks" value="{{ block.pk }}"
+                        {% if wp and block in wp.blocks.all %}checked{% endif %}
+                        style="width:16px;height:16px;accent-color:var(--accent);">
+                    <div>
+                        <div style="font-weight:600;font-size:13px;">Block {{ block.name }}</div>
+                        <div style="font-size:11px;color:var(--text-secondary);">{{ block.block_type }} · {{ block.floors }} floor{{ block.floors|pluralize }} · {{ block.total_rooms }} rooms</div>
+                    </div>
+                    <span class="badge-status {% if block.block_type == 'Boys' %}badge-active{% elif block.block_type == 'Girls' %}badge-available{% else %}badge-pending{% endif %}" style="margin-left:auto;font-size:10px;">{{ block.block_type }}</span>
+                </label>
+            </div>
+            {% empty %}
+            <div class="col-12"><p style="color:var(--text-muted);font-size:13px;">No active blocks found. <a href="{% url 'block_add' %}">Add blocks first.</a></p></div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% if wp %}
+    <div class="card mb-3">
+        <div class="card-header"><i class="fas fa-toggle-on me-2"></i>Account Status</div>
+        <div class="card-body">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="is_active" id="isActive" {% if wp.is_active %}checked{% endif %} style="width:40px;height:22px;">
+                <label class="form-check-label ms-2" for="isActive" style="line-height:22px;">Warden account is active</label>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="d-flex gap-2 mt-2">
+        <button type="submit" class="btn btn-primary px-4"><i class="fas fa-save me-2"></i>{{ action }} Warden</button>
+        <a href="{% url 'warden_list' %}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+    </form>
+</div>
+
+<div class="col-xl-5">
+    <div class="card">
+        <div class="card-header"><i class="fas fa-circle-info me-2" style="color:var(--accent);"></i>Access Permissions</div>
+        <div class="card-body" style="font-size:13px;line-height:2;">
+            <div style="margin-bottom:12px;color:var(--text-secondary);">A warden assigned to a block can:</div>
+            <div><i class="fas fa-check me-2" style="color:var(--success);"></i>View students in their block</div>
+            <div><i class="fas fa-check me-2" style="color:var(--success);"></i>Edit student details</div>
+            <div><i class="fas fa-check me-2" style="color:var(--success);"></i>Add & view rooms in their block</div>
+            <div><i class="fas fa-check me-2" style="color:var(--success);"></i>Allocate & vacate rooms</div>
+            <div><i class="fas fa-check me-2" style="color:var(--success);"></i>View mess registrations</div>
+            <div><i class="fas fa-check me-2" style="color:var(--success);"></i>Mark mess bills as paid</div>
+            <div><i class="fas fa-check me-2" style="color:var(--success);"></i>View & update complaints</div>
+            <hr style="border-color:var(--border);">
+            <div style="color:var(--text-secondary);">A warden <strong style="color:var(--danger);">cannot</strong>:</div>
+            <div><i class="fas fa-xmark me-2" style="color:var(--danger);"></i>Access other blocks' data</div>
+            <div><i class="fas fa-xmark me-2" style="color:var(--danger);"></i>Add or delete blocks</div>
+            <div><i class="fas fa-xmark me-2" style="color:var(--danger);"></i>Generate mess bills globally</div>
+            <div><i class="fas fa-xmark me-2" style="color:var(--danger);"></i>Manage other wardens</div>
+        </div>
+    </div>
+</div>
+</div>
+
+<style>
+.block-checkbox-label:has(input:checked) {
+    border-color: var(--accent);
+    background: rgba(79,142,247,0.05);
+}
+</style>
+{% endblock %}
