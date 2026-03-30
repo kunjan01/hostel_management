@@ -23,6 +23,16 @@ from apps.services.billing_service import (
 )
 from apps.students.models import Student
 
+from .filters import (
+    BlockFilter,
+    MessBillFilter,
+    MessMenuFilter,
+    MessRegistrationFilter,
+    RoomAllocationFilter,
+    RoomBillFilter,
+    RoomFilter,
+    StudentFilter,
+)
 from .serializers import (
     BlockSerializer,
     CombinedBillSerializer,
@@ -54,6 +64,7 @@ class StudentViewSet(viewsets.ModelViewSet):
 
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    filter_class = StudentFilter
     pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['name', 'enrollment_no', 'email']
@@ -137,6 +148,7 @@ class BlockViewSet(viewsets.ModelViewSet):
 
     queryset = Block.objects.all()
     serializer_class = BlockSerializer
+    filter_class = BlockFilter
     pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['name', 'warden_name']
@@ -172,6 +184,7 @@ class RoomViewSet(viewsets.ModelViewSet):
 
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
+    filter_class = RoomFilter
     pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['room_number', 'block__name', 'room_type']
@@ -207,6 +220,7 @@ class RoomAllocationViewSet(viewsets.ModelViewSet):
 
     queryset = RoomAllocation.objects.all()
     serializer_class = RoomAllocationSerializer
+    filter_class = RoomAllocationFilter
     pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     ordering_fields = ['allocation_date', 'status']
@@ -243,6 +257,7 @@ class RoomBillViewSet(viewsets.ModelViewSet):
 
     queryset = RoomBill.objects.all()
     serializer_class = RoomBillSerializer
+    filter_class = RoomBillFilter
     pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['student__name', 'status']
@@ -286,6 +301,7 @@ class MessMenuViewSet(viewsets.ModelViewSet):
 
     queryset = MessMenu.objects.all()
     serializer_class = MessMenuSerializer
+    filter_class = MessMenuFilter
     pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['day', 'meal']
@@ -311,6 +327,7 @@ class MessRegistrationViewSet(viewsets.ModelViewSet):
 
     queryset = MessRegistration.objects.all()
     serializer_class = MessRegistrationSerializer
+    filter_class = MessRegistrationFilter
     pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['student__name', 'plan']
@@ -338,6 +355,7 @@ class MessBillViewSet(viewsets.ModelViewSet):
 
     queryset = MessBill.objects.all()
     serializer_class = MessBillSerializer
+    filter_class = MessBillFilter
     pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
     search_fields = ['student__name', 'status']

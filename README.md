@@ -101,6 +101,8 @@ curl -X GET http://localhost/api/v1/students/ \
 - `GET/POST /api/v1/mess-menu/` - Mess menu (paginated)
 
 📚 **Full pagination guide:** [PAGINATION_GUIDE.md](./PAGINATION_GUIDE.md)
+🔍 **Advanced filtering guide:** [FILTERING_GUIDE.md](./FILTERING_GUIDE.md)
+📖 **Complete API examples:** [API_EXAMPLES.md](./API_EXAMPLES.md)
 
 ### First Time Setup
 After starting the application, create a superuser:
